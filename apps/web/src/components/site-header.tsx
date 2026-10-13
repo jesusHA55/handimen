@@ -1,6 +1,6 @@
 "use client";
 
-import { Compass, Map, Plus, User, Inbox } from "lucide-react";
+import { Compass, Inbox, Map, MessageSquare, Plus, User } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 
@@ -19,9 +19,10 @@ const NAV = [
   { href: "/explore", icon: Compass, key: "explore" },
   { href: "/map", icon: Map, key: "map" },
   { href: "/requests", icon: Inbox, key: "requests" },
+  { href: "/messages", icon: MessageSquare, key: "messages" },
 ] as const;
 
-export function SiteHeader({ user }: { user: HeaderUser }) {
+export function SiteHeader({ user, unreadCount = 0 }: { user: HeaderUser; unreadCount?: number }) {
   const t = useTranslations("nav");
   const pathname = usePathname();
 
@@ -44,17 +45,23 @@ export function SiteHeader({ user }: { user: HeaderUser }) {
           {NAV.map((item) => {
             const Icon = item.icon;
             const active = pathname.startsWith(item.href);
+            const showBadge = item.key === "messages" && unreadCount > 0;
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "inline-flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-sm font-medium transition-colors",
+                  "relative inline-flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-sm font-medium transition-colors",
                   active ? "bg-muted text-foreground" : "text-muted-foreground hover:text-foreground",
                 )}
               >
                 <Icon className="size-4" aria-hidden />
                 <span className="hidden md:inline">{t(item.key)}</span>
+                {showBadge ? (
+                  <span className="grid size-4 place-items-center rounded-full bg-accent text-[10px] font-bold text-accent-foreground">
+                    {unreadCount}
+                  </span>
+                ) : null}
               </Link>
             );
           })}

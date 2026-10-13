@@ -27,13 +27,20 @@ without a Supabase connection yet — by design, the stores are drop-in replacea
 | `/map` | Stylized, keyless mock map of Poblenou with clickable pins |
 | `/listings/[id]` | Listing detail + request form |
 | `/listings/new` | Publish a listing (exercises the Tier-1 phone gate) |
-| `/requests` | Outgoing + incoming requests with the mock escrow lifecycle |
-| `/profile` | Trust tier, verification state, mock phone verification |
+| `/requests` | Outgoing + incoming requests with the mock escrow lifecycle; leave a review once returned |
+| `/messages` | Conversation inbox with unread counts |
+| `/messages/[id]` | Thread view + composer (async) |
+| `/profile` | Trust tier, verification state, mock phone verification, reviews received |
 
 `es` is the default locale (`/`); English lives under `/en`.
 
 To publish a **paid** listing while unverified, the form blocks and offers a
 mock "verify phone" step — the tiered trust policy in action.
+
+Reviews are two-way and only unlock after a borrow is marked returned; a
+completed handoff bumps both members' stats.
+
+To **connect Supabase**, see [`docs/supabase.md`](./docs/supabase.md).
 
 ## Layout
 

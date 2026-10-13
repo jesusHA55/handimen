@@ -1,4 +1,4 @@
-import { CURRENT_USER_ID, getListingsRepository } from "@handimen/core";
+import { CURRENT_USER_ID, getListingsRepository, getMessagesStore } from "@handimen/core";
 import type { Metadata } from "next";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -45,6 +45,7 @@ export default async function LocaleLayout({
 
   const t = await getTranslations("footer");
   const owner = await getListingsRepository().getOwner(CURRENT_USER_ID);
+  const unreadCount = await getMessagesStore().unreadCount(CURRENT_USER_ID);
   const user = {
     displayName: owner?.displayName ?? "Tú",
     avatarEmoji: owner?.avatarEmoji ?? "🙋",
@@ -55,7 +56,7 @@ export default async function LocaleLayout({
     <html lang={locale} suppressHydrationWarning>
       <body className="min-h-dvh antialiased">
         <NextIntlClientProvider>
-          <SiteHeader user={user} />
+          <SiteHeader user={user} unreadCount={unreadCount} />
           <div className="mx-auto max-w-6xl px-4 py-8">{children}</div>
           <footer className="mx-auto max-w-6xl border-t border-border px-4 py-6 text-sm text-muted-foreground">
             {t("note")}

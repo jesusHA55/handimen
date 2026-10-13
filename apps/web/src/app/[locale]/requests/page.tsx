@@ -1,7 +1,13 @@
-import { CURRENT_USER_ID, getRequestsStoreReady } from "@handimen/core";
+import {
+  CURRENT_USER_ID,
+  getListingsRepository,
+  getRequestsStoreReady,
+  getReviewsStore,
+} from "@handimen/core";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { RequestRow } from "@/components/request-row";
+import { ReviewForm } from "@/components/review-form";
 import type { Locale } from "@/lib/format";
 
 export default async function RequestsPage({
@@ -19,6 +25,21 @@ export default async function RequestsPage({
     store.list({ requesterId: CURRENT_USER_ID }),
     store.list({ ownerId: CURRENT_USER_ID }),
   ]);
+
+  const reviews = getReviewsStore(getListingsRepository(), store);
+
+  // A completed borrow can still be reviewed by the requester until they do.
+  const reviewable = new Set(
+    (
+      await Promise.all(
+        outgoing
+          .filter((request) => request.status === "returned")
+          .map(async (request) =>
+            (await reviews.hasReviewed(request.id, CURRENT_USER_ID)) ? null : request.id,
+          ),
+      )
+    ).filter((id): id is string => id !== null),
+  );
 
   const sections = [
     { key: "incoming" as const, title: t("incoming"), items: incoming, role: "owner" as const },
@@ -39,8 +60,9 @@ export default async function RequestsPage({
           ) : (
             <ul className="flex flex-col gap-3">
               {section.items.map((request) => (
-                <li key={request.id}>
+                <li key={request.id} className="flex flex-col gap-3">
                   <RequestRow request={request} role={section.role} locale={locale as Locale} />
+                  {reviewable.has(request.id) ? <ReviewForm requestId={request.id} /> : null}
                 </li>
               ))}
             </ul>

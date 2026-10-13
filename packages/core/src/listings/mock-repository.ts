@@ -18,6 +18,10 @@ export interface ListingsRepository {
   setStatus(id: string, status: ListingStatus): Promise<Listing | null>;
   /** Mock Tier-1 verification toggle for the current demo user. */
   verifyPhone(ownerId: string): Promise<ListingOwner | null>;
+  /** Fold a new star rating into the owner's aggregate. */
+  addReview(ownerId: string, rating: number): Promise<ListingOwner | null>;
+  /** Bump a member's completed-handoff count. */
+  incrementHandoffs(ownerId: string): Promise<ListingOwner | null>;
 }
 
 function matches(listing: Listing, filter: ListingFilter | undefined): boolean {
@@ -122,6 +126,28 @@ export class MockListingsRepository implements ListingsRepository {
     const owner = this.owners.get(ownerId);
     if (!owner) return null;
     const next: ListingOwner = { ...owner, phoneVerified: true, trustTier: owner.trustTier === 0 ? 1 : owner.trustTier };
+    this.owners.set(ownerId, next);
+    return next;
+  }
+
+  async addReview(ownerId: string, rating: number): Promise<ListingOwner | null> {
+    const owner = this.owners.get(ownerId);
+    if (!owner) return null;
+    const count = owner.reviewCount + 1;
+    const average = (owner.rating * owner.reviewCount + rating) / count;
+    const next: ListingOwner = {
+      ...owner,
+      reviewCount: count,
+      rating: Math.round(average * 10) / 10,
+    };
+    this.owners.set(ownerId, next);
+    return next;
+  }
+
+  async incrementHandoffs(ownerId: string): Promise<ListingOwner | null> {
+    const owner = this.owners.get(ownerId);
+    if (!owner) return null;
+    const next: ListingOwner = { ...owner, completedHandoffs: owner.completedHandoffs + 1 };
     this.owners.set(ownerId, next);
     return next;
   }

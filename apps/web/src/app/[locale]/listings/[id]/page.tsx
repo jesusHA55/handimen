@@ -1,9 +1,16 @@
-import { CURRENT_USER_ID, getListingsRepository } from "@handimen/core";
+import {
+  CURRENT_USER_ID,
+  getListingsRepository,
+  getRequestsStoreReady,
+  getReviewsStore,
+} from "@handimen/core";
 import { ArrowLeft, MapPin, Star } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 
 import { RequestForm } from "@/components/request-form";
+import { ReviewList } from "@/components/review-list";
+import { StartThreadForm } from "@/components/start-thread-form";
 import { TrustBadge } from "@/components/trust-badge";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -25,9 +32,16 @@ export default async function ListingPage({
   const owner = await listings.getOwner(listing.ownerId);
   const t = await getTranslations("listing");
   const tRequest = await getTranslations("request");
+  const tReview = await getTranslations("review");
+  const tMessages = await getTranslations("messages");
   const tCategories = await getTranslations("categories");
   const isYours = listing.ownerId === CURRENT_USER_ID;
   const isRent = listing.terms === "rent";
+
+  const reviews = getReviewsStore(listings, await getRequestsStoreReady());
+  const ownerReviews = owner ? await reviews.listForUser(owner.id) : [];
+  const reviewers = await listings.getOwners(ownerReviews.map((review) => review.reviewerId));
+  const reviewerMap = new Map(reviewers.map((reviewer) => [reviewer.id, reviewer]));
 
   return (
     <div className="mx-auto flex max-w-4xl flex-col gap-6">
@@ -64,6 +78,20 @@ export default async function ListingPage({
               {t("pickup")}: Poblenou
             </div>
           </div>
+
+          <section className="flex flex-col gap-3">
+            <h2 className="text-lg font-semibold">{tReview("recent")}</h2>
+            <ReviewList
+              items={ownerReviews.map((review) => ({
+                id: review.id,
+                rating: review.rating,
+                comment: review.comment,
+                createdAt: review.createdAt,
+                reviewerName: reviewerMap.get(review.reviewerId)?.displayName ?? "?",
+                reviewerEmoji: reviewerMap.get(review.reviewerId)?.avatarEmoji ?? "🙂",
+              }))}
+            />
+          </section>
         </div>
 
         <div className="flex flex-col gap-4">
@@ -115,16 +143,26 @@ export default async function ListingPage({
               {t("yours")}
             </p>
           ) : (
-            <Card>
-              <CardContent className="flex flex-col gap-4 pt-5">
-                <div className="flex flex-col gap-1">
-                  <h2 className="font-semibold">{tRequest("title")}</h2>
-                  <p className="text-sm text-muted-foreground">{tRequest("subtitle")}</p>
-                </div>
-                <RequestForm listingId={listing.id} />
-                <p className="text-xs text-muted-foreground">{tRequest("escrowNote")}</p>
-              </CardContent>
-            </Card>
+            <>
+              <Card>
+                <CardContent className="flex flex-col gap-4 pt-5">
+                  <div className="flex flex-col gap-1">
+                    <h2 className="font-semibold">{tRequest("title")}</h2>
+                    <p className="text-sm text-muted-foreground">{tRequest("subtitle")}</p>
+                  </div>
+                  <RequestForm listingId={listing.id} />
+                  <p className="text-xs text-muted-foreground">{tRequest("escrowNote")}</p>
+                </CardContent>
+              </Card>
+
+              <StartThreadForm
+                ownerId={listing.ownerId}
+                listingId={listing.id}
+                listingTitle={listing.title}
+                locale={locale}
+                label={tMessages("start")}
+              />
+            </>
           )}
         </div>
       </div>

@@ -1,8 +1,14 @@
-import { CURRENT_USER_ID, getListingsRepository } from "@handimen/core";
-import { Check, ShieldCheck, X } from "lucide-react";
+import {
+  CURRENT_USER_ID,
+  getListingsRepository,
+  getRequestsStoreReady,
+  getReviewsStore,
+} from "@handimen/core";
+import { Check, ShieldCheck, Star, X } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { ListingCard } from "@/components/listing-card";
+import { ReviewList } from "@/components/review-list";
 import { TrustBadge } from "@/components/trust-badge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -18,9 +24,15 @@ export default async function ProfilePage({
   setRequestLocale(locale);
 
   const t = await getTranslations("profile");
+  const tReview = await getTranslations("review");
   const listings = getListingsRepository();
   const owner = await listings.getOwner(CURRENT_USER_ID);
   const mine = await listings.list({ ownerId: CURRENT_USER_ID });
+
+  const reviews = getReviewsStore(listings, await getRequestsStoreReady());
+  const received = await reviews.listForUser(CURRENT_USER_ID);
+  const reviewers = await listings.getOwners(received.map((review) => review.reviewerId));
+  const reviewerMap = new Map(reviewers.map((reviewer) => [reviewer.id, reviewer]));
 
   const checks = [
     { key: "email", label: t("email"), ok: owner?.emailVerified ?? false },
@@ -39,6 +51,12 @@ export default async function ProfilePage({
           <div className="mt-1 flex items-center gap-2">
             <TrustBadge tier={owner?.trustTier ?? 0} />
             <span className="text-sm text-muted-foreground">{owner?.neighbourhood}</span>
+            {owner && owner.reviewCount > 0 ? (
+              <span className="flex items-center gap-0.5 text-sm text-muted-foreground">
+                <Star className="size-3.5 fill-accent text-accent" aria-hidden />
+                {owner.rating.toFixed(1)} ({owner.reviewCount})
+              </span>
+            ) : null}
           </div>
         </div>
       </div>
@@ -88,6 +106,20 @@ export default async function ProfilePage({
           </div>
         ))}
       </dl>
+
+      <section className="flex flex-col gap-3">
+        <h2 className="text-lg font-semibold">{tReview("recent")}</h2>
+        <ReviewList
+          items={received.map((review) => ({
+            id: review.id,
+            rating: review.rating,
+            comment: review.comment,
+            createdAt: review.createdAt,
+            reviewerName: reviewerMap.get(review.reviewerId)?.displayName ?? "?",
+            reviewerEmoji: reviewerMap.get(review.reviewerId)?.avatarEmoji ?? "🙂",
+          }))}
+        />
+      </section>
 
       <section className="flex flex-col gap-3">
         <h2 className="text-lg font-semibold">{t("myListings")}</h2>

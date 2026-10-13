@@ -3,7 +3,9 @@
 import {
   CURRENT_USER_ID,
   getListingsRepository,
+  getMessagesStore,
   getRequestsStoreReady,
+  getReviewsStore,
   getSocialRepository,
   listingGate,
   type ListingOwner,
@@ -96,13 +98,23 @@ export async function createRequestAction(formData: FormData) {
   const endDate = str(formData, "endDate");
 
   const store = await getRequestsStoreReady();
-  await store.create({
+  const request = await store.create({
     listingId,
     requesterId: CURRENT_USER_ID,
     startDate: new Date(startDate).toISOString(),
     endDate: new Date(endDate).toISOString(),
     message: str(formData, "message") || undefined,
   });
+
+  // Open a conversation with the owner so the two can arrange the handoff.
+  const listing = await getListingsRepository().get(listingId);
+  if (listing) {
+    await getMessagesStore().getOrCreateThread({
+      participantA: CURRENT_USER_ID,
+      participantB: listing.ownerId,
+      context: { listingId: listing.id, listingTitle: listing.title, requestId: request.id },
+    });
+  }
 
   revalidatePath("/", "layout");
   redirect(localePath(locale, "/requests"));
@@ -133,4 +145,50 @@ export async function toggleLikeAction(formData: FormData) {
 export async function verifyPhoneAction() {
   await getListingsRepository().verifyPhone(CURRENT_USER_ID);
   revalidatePath("/", "layout");
+}
+
+export async function startThreadAction(formData: FormData) {
+  const locale = str(formData, "locale") || "es";
+  const ownerId = str(formData, "ownerId");
+  if (!ownerId) return;
+
+  const thread = await getMessagesStore().getOrCreateThread({
+    participantA: CURRENT_USER_ID,
+    participantB: ownerId,
+    context: {
+      listingId: str(formData, "listingId") || null,
+      listingTitle: str(formData, "listingTitle") || null,
+    },
+  });
+
+  revalidatePath("/", "layout");
+  redirect(localePath(locale, `/messages/${thread.id}`));
+}
+
+export async function sendMessageAction(formData: FormData) {
+  const locale = str(formData, "locale") || "es";
+  const threadId = str(formData, "threadId");
+  const body = str(formData, "body");
+  if (body) {
+    await getMessagesStore().sendMessage({ threadId, senderId: CURRENT_USER_ID, body });
+  }
+  revalidatePath("/", "layout");
+  redirect(localePath(locale, `/messages/${threadId}`));
+}
+
+export async function createReviewAction(formData: FormData) {
+  const locale = str(formData, "locale") || "es";
+  const requestId = str(formData, "requestId");
+  const rating = Number.parseInt(str(formData, "rating"), 10);
+
+  const reviews = getReviewsStore(getListingsRepository(), await getRequestsStoreReady());
+  await reviews.create({
+    requestId,
+    reviewerId: CURRENT_USER_ID,
+    rating: Number.isFinite(rating) ? rating : 5,
+    comment: str(formData, "comment") || null,
+  });
+
+  revalidatePath("/", "layout");
+  redirect(localePath(locale, "/requests"));
 }

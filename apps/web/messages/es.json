@@ -7,6 +7,7 @@
     "explore": "Explorar",
     "map": "Mapa",
     "requests": "Solicitudes",
+    "messages": "Mensajes",
     "profile": "Perfil",
     "newListing": "Publicar",
     "signIn": "Entrar"
@@ -186,6 +187,27 @@
     },
     "myListings": "Tus anuncios",
     "noListings": "Todavía no has publicado nada."
+  },
+  "messages": {
+    "title": "Mensajes",
+    "start": "Enviar mensaje",
+    "empty": "Todavía no hay conversaciones. Escribe a un vecino desde cualquier anuncio.",
+    "placeholder": "Escribe un mensaje…",
+    "send": "Enviar",
+    "you": "Tú",
+    "about": "Sobre",
+    "unread": "{count} nuevos",
+    "backToInbox": "Volver a mensajes"
+  },
+  "review": {
+    "recent": "Reseñas recientes",
+    "leaveTitle": "Deja una reseña",
+    "leaveSubtitle": "¿Cómo fue el préstamo? Las reseñas mantienen la confianza del barrio.",
+    "rating": "Valoración",
+    "comment": "Comentario",
+    "commentPlaceholder": "Cuéntale al barrio cómo fue…",
+    "submit": "Publicar reseña",
+    "empty": "Todavía no hay reseñas."
   },
   "trustBadge": {
     "tier0": "Nivel 0",

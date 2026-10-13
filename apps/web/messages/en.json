@@ -7,6 +7,7 @@
     "explore": "Explore",
     "map": "Map",
     "requests": "Requests",
+    "messages": "Messages",
     "profile": "Profile",
     "newListing": "List something",
     "signIn": "Sign in"
@@ -186,6 +187,27 @@
     },
     "myListings": "Your listings",
     "noListings": "You haven't listed anything yet."
+  },
+  "messages": {
+    "title": "Messages",
+    "start": "Message",
+    "empty": "No conversations yet. Message a neighbour from any listing.",
+    "placeholder": "Write a message…",
+    "send": "Send",
+    "you": "You",
+    "about": "About",
+    "unread": "{count} new",
+    "backToInbox": "Back to messages"
+  },
+  "review": {
+    "recent": "Recent reviews",
+    "leaveTitle": "Leave a review",
+    "leaveSubtitle": "How did the handoff go? Reviews keep the neighbourhood trustworthy.",
+    "rating": "Rating",
+    "comment": "Comment",
+    "commentPlaceholder": "Tell the neighbourhood how it went…",
+    "submit": "Post review",
+    "empty": "No reviews yet."
   },
   "trustBadge": {
     "tier0": "Tier 0",

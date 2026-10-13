@@ -127,8 +127,12 @@ export class MockRequestsStore {
   }
 
   /** Return: funds are released to the lender. */
-  markReturned(id: string) {
-    return this.transition(id, "returned", "release");
+  async markReturned(id: string) {
+    const returned = await this.transition(id, "returned", "release");
+    // Both sides complete a handoff, which feeds their reputation stats.
+    await this.listings.incrementHandoffs(returned.requesterId);
+    await this.listings.incrementHandoffs(returned.ownerId);
+    return returned;
   }
 
   cancel(id: string) {
