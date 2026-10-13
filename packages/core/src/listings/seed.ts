@@ -109,6 +109,23 @@ function listing(
 
 export const SEED_LISTINGS: Listing[] = [
   listing({
+    id: "listing_taladro_you",
+    ownerId: CURRENT_USER_ID,
+    type: "tool",
+    terms: "rent",
+    category: "power_tools",
+    title: "Taladro ligero Makita",
+    description:
+      "Taladro ligero con batería y cargador. Lo alquilo por días para trabajos pequeños en casa. Recogida en la Rambla.",
+    photos: ["🛠️"],
+    priceCents: 1000,
+    priceUnit: "day",
+    depositCents: 3000,
+    lat: 41.4002,
+    lng: 2.1985,
+    days: 0,
+  }),
+  listing({
     id: "listing_taladro",
     ownerId: "profile_marta",
     type: "tool",

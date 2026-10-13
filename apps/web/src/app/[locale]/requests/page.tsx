@@ -1,4 +1,4 @@
-import { CURRENT_USER_ID, getRequestsStore } from "@handimen/core";
+import { CURRENT_USER_ID, getRequestsStoreReady } from "@handimen/core";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { RequestRow } from "@/components/request-row";
@@ -13,7 +13,7 @@ export default async function RequestsPage({
   setRequestLocale(locale);
 
   const t = await getTranslations("request");
-  const store = getRequestsStore();
+  const store = await getRequestsStoreReady();
 
   const [outgoing, incoming] = await Promise.all([
     store.list({ requesterId: CURRENT_USER_ID }),

@@ -3,7 +3,7 @@
 import {
   CURRENT_USER_ID,
   getListingsRepository,
-  getRequestsStore,
+  getRequestsStoreReady,
   getSocialRepository,
   listingGate,
   type ListingOwner,
@@ -95,7 +95,7 @@ export async function createRequestAction(formData: FormData) {
   const startDate = str(formData, "startDate");
   const endDate = str(formData, "endDate");
 
-  const store = getRequestsStore();
+  const store = await getRequestsStoreReady();
   await store.create({
     listingId,
     requesterId: CURRENT_USER_ID,
@@ -112,7 +112,7 @@ export async function advanceRequestAction(formData: FormData) {
   const locale = str(formData, "locale") || "es";
   const id = str(formData, "requestId");
   const action = str(formData, "requestAction");
-  const store = getRequestsStore();
+  const store = await getRequestsStoreReady();
 
   if (action === "approve") await store.approve(id);
   else if (action === "decline") await store.decline(id);
