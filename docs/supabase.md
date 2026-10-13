@@ -8,6 +8,22 @@ There are two paths. They're not exclusive — most teams do **A then B**.
 
 ---
 
+## Status
+
+- [x] Hosted project created (`dlngsvlzitwavzqgdkco`, Paris) and schema applied
+- [x] 17 tables · RLS enabled on all 17 · 44 public + 4 storage policies · 2 buckets
+- [x] Extensions: postgis 3.3.7, pg_trgm 1.6, pgcrypto 1.3, pg_cron 1.6.4
+- [x] Seeded: Barcelona city
+- [x] Real generated DB types in `packages/db/src/database.types.ts`
+- [x] `GET /api/health` proves connectivity (reads `cities` through RLS)
+- [ ] Supabase Auth (email OTP + Google) — next
+- [ ] Swap the mock repositories for Supabase-backed implementations
+
+> Migrations were applied via the Management API (no local Postgres/CLI needed).
+> The CLI is only required for `supabase db push` / `pnpm db:types` workflows.
+
+---
+
 ## Path A — Local Supabase (no account, no cost) ← recommended first
 
 Requires only:
