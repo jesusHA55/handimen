@@ -4,7 +4,6 @@ export const LISTING_TYPES = ["tool", "equipment", "skill", "service"] as const;
 export type ListingType = (typeof LISTING_TYPES)[number];
 
 export const LISTING_TERMS = ["free", "rent"] as const;
-export type { ListingTerms } from "../trust/policy";
 
 export interface Category {
   /** Stable key stored in the DB. */

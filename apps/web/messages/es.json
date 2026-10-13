@@ -4,72 +4,195 @@
     "description": "Comparte herramientas, equipo y habilidades con tus vecinos de Poblenou."
   },
   "nav": {
+    "explore": "Explorar",
+    "map": "Mapa",
+    "requests": "Solicitudes",
+    "profile": "Perfil",
+    "newListing": "Publicar",
     "signIn": "Entrar"
   },
   "home": {
     "eyebrow": "Poblenou, Barcelona",
     "title": "Comparte herramientas, equipo y habilidades con tus vecinos",
-    "subtitle": "Handimen es una red de barrio que combina un muro social con el préstamo entre vecinos. Pide prestado, alquila o comparte gratis — y descubre quién de tu barrio puede echarte una mano.",
-    "cta": {
-      "primary": "Explorar el barrio",
-      "secondary": "Cómo funciona"
+    "subtitle": "Una red de barrio para prestar lo que ya tienes — gratis o por una pequeña tarifa. Pide un taladro, alquila una bici de carga o pide una mano.",
+    "ctaPrimary": "Explorar el barrio",
+    "ctaSecondary": "Ver el mapa",
+    "stats": {
+      "listings": "anuncios cerca",
+      "free": "gratis",
+      "neighbours": "vecinos"
     },
-    "features": {
-      "title": "Todo lo que necesitas para compartir",
-      "subtitle": "La base de la Fase 0 está lista. Estas son las piezas que ya sostienen el producto.",
-      "items": {
-        "feed": {
-          "title": "Muro de barrio",
-          "description": "Publica lo que tienes o lo que te hace falta. Reacciones y comentarios para que el barrio responda."
-        },
-        "lending": {
-          "title": "Préstamo y alquiler",
-          "description": "Listados gratuitos o de pago, con solicitudes, calendario y recogida en persona."
-        },
-        "trust": {
-          "title": "Confianza por niveles",
-          "description": "Verificación progresiva, reseñas bidireccionales y avales de la comunidad."
-        },
-        "local": {
-          "title": "Descubrimiento local",
-          "description": "Búsqueda por radio con PostGIS, filtros por categoría y comunidades privadas."
-        }
-      }
+    "feed": {
+      "title": "Qué pasa en Poblenou",
+      "subtitle": "Vecinos pidiendo una mano, compartiendo lo que acaban de prestar y consejos del barrio.",
+      "empty": "Todavía no hay publicaciones."
     },
-    "trust": {
-      "title": "Confianza, por niveles",
-      "subtitle": "La verificación escala según el riesgo — así mantenemos el coste bajo mientras crece la seguridad.",
-      "items": {
-        "tier0": {
-          "title": "Nivel 0 · Gratis",
-          "description": "Email verificado, perfil completo, reseñas, reportes y avales."
-        },
-        "tier1": {
-          "title": "Nivel 1 · Teléfono",
-          "description": "Solo para listados de pago o el primer préstamo. Mantiene el gasto en SMS bajo."
-        },
-        "tier2": {
-          "title": "Nivel 2 · Identidad",
-          "description": "Verificación de identidad para alquileres de alto valor (Fase 3)."
-        }
-      }
-    },
-    "categories": {
-      "title": "Categorías",
-      "subtitle": "Desde herramientas eléctricas hasta habilidades y ayuda puntual."
-    },
-    "release": {
-      "title": "Fase 0 · Base preparada",
-      "items": {
-        "monorepo": "Monorepo pnpm + Turborepo con paquetes compartidos",
-        "db": "Esquema Postgres + PostGIS con RLS y migraciones",
-        "payments": "Interfaz PaymentsProvider con proveedor simulado",
-        "i18n": "Internacionalización es / en (con hueco para el catalán)",
-        "ci": "CI, tipos y tests en verde"
-      }
+    "featured": {
+      "title": "Popular ahora mismo",
+      "subtitle": "Publicado recientemente cerca de ti.",
+      "seeAll": "Ver todo"
     }
   },
+  "categories": {
+    "power_tools": "Herramientas eléctricas",
+    "garden_outdoors": "Jardín y exterior",
+    "kitchen": "Cocina",
+    "sports_camping": "Deporte y camping",
+    "electronics": "Electrónica",
+    "home_cleaning": "Hogar y limpieza",
+    "automotive": "Automoción",
+    "party_events": "Fiestas y eventos",
+    "skills": "Habilidades",
+    "help_time": "Ayuda y tiempo"
+  },
+  "listing": {
+    "free": "Gratis",
+    "rent": "En alquiler",
+    "freeToBorrow": "Gratis",
+    "units": {
+      "hour": "hora",
+      "day": "día",
+      "week": "semana"
+    },
+    "owner": "Propietario",
+    "deposit": "Fianza",
+    "pickup": "Recogida",
+    "about": "Sobre este anuncio",
+    "posted": "Publicado {time}",
+    "yours": "Este anuncio es tuyo",
+    "backToExplore": "Volver a explorar",
+    "notFound": "Anuncio no encontrado."
+  },
+  "explore": {
+    "title": "Explora el barrio",
+    "subtitle": "Filtra lo que tus vecinos prestan cerca de ti.",
+    "search": "Buscar",
+    "searchPlaceholder": "Taladro, proyector, bici de carga…",
+    "category": "Categoría",
+    "anyCategory": "Todas las categorías",
+    "terms": "Precio",
+    "anyTerms": "Gratis o alquiler",
+    "freeOnly": "Solo gratis",
+    "rentOnly": "Solo alquiler",
+    "type": "Tipo",
+    "anyType": "Cualquier tipo",
+    "types": {
+      "tool": "Herramienta",
+      "equipment": "Equipo",
+      "skill": "Habilidad",
+      "service": "Servicio"
+    },
+    "apply": "Aplicar filtros",
+    "reset": "Limpiar",
+    "resultsCount": "{count} anuncios",
+    "empty": "Todavía no hay nada con esos filtros."
+  },
+  "map": {
+    "title": "El mapa del barrio",
+    "subtitle": "Una vista estilizada de Poblenou. Toca un marcador para ver qué hay.",
+    "sea": "Mar",
+    "park": "Parque",
+    "close": "Cerrar",
+    "legendFree": "Gratis",
+    "legendRent": "En alquiler",
+    "count": "{count} anuncios en el mapa",
+    "viewListing": "Ver anuncio"
+  },
+  "request": {
+    "title": "Solicitar el préstamo",
+    "listTitle": "Tus solicitudes",
+    "subtitle": "Elige las fechas y envía un mensaje corto al propietario.",
+    "startDate": "Desde",
+    "endDate": "Hasta",
+    "message": "Mensaje",
+    "messagePlaceholder": "¡Hola! Lo necesitaría este finde para una mudanza pequeña.",
+    "submit": "Enviar solicitud",
+    "price": "Precio",
+    "deposit": "Fianza retenida hasta la devolución",
+    "escrowNote": "El pago está simulado en esta demo — el flujo de escrow es real, el dinero no.",
+    "outgoing": "Tus solicitudes",
+    "incoming": "Solicitudes de tus anuncios",
+    "empty": "Todavía no hay solicitudes.",
+    "status": {
+      "pending": "Pendiente",
+      "approved": "Aprobada",
+      "active": "Prestado",
+      "returned": "Devuelto",
+      "declined": "Rechazada",
+      "cancelled": "Cancelada"
+    },
+    "payment": {
+      "label": "Pago",
+      "none": "Sin pago",
+      "pending": "Pendiente",
+      "authorized": "Retenido",
+      "captured": "Cobrado",
+      "released": "Liberado al propietario",
+      "refunded": "Reembolsado",
+      "cancelled": "Cancelado",
+      "failed": "Fallido"
+    },
+    "actions": {
+      "approve": "Aprobar",
+      "decline": "Rechazar",
+      "activate": "Marcar recogido",
+      "return": "Marcar devuelto",
+      "cancel": "Cancelar"
+    }
+  },
+  "newListing": {
+    "title": "Publicar algo",
+    "subtitle": "Comparte una herramienta, un equipo o una habilidad con el barrio.",
+    "fields": {
+      "type": "¿Qué compartes?",
+      "terms": "Precio",
+      "category": "Categoría",
+      "title": "Título",
+      "description": "Descripción",
+      "price": "Precio (€)",
+      "priceUnit": "Por",
+      "deposit": "Fianza (€)",
+      "pickup": "Lugar de recogida"
+    },
+    "pickupHint": "De momento simulado — los anuncios aparecen cerca del centro de Poblenou.",
+    "termsFree": "Gratis",
+    "termsRent": "En alquiler",
+    "submit": "Publicar anuncio",
+    "cancel": "Cancelar",
+    "errors": {
+      "invalid_fields": "Añade un título (3+ caracteres) y una descripción.",
+      "verify_email": "Verifica tu email antes de publicar.",
+      "phone_required_for_paid": "Verifica tu teléfono para publicar un alquiler. Mantiene la confianza del barrio sin costarnos apenas nada.",
+      "phone_required_first_lend": "Verifica tu teléfono antes de tu primer anuncio.",
+      "not_allowed": "Todavía no puedes publicar este anuncio."
+    },
+    "verifyPhone": "Verificar teléfono (demo)"
+  },
+  "profile": {
+    "title": "Tu perfil",
+    "trustTitle": "Tu nivel de confianza",
+    "trustSubtitle": "La verificación escala según el riesgo, así solo pedimos lo necesario.",
+    "email": "Email",
+    "phone": "Teléfono",
+    "identity": "Identidad",
+    "verified": "Verificado",
+    "notVerified": "Sin verificar",
+    "verifyPhone": "Verificar teléfono (demo)",
+    "verifyPhoneNote": "En producción esto envía un código de un solo uso por SMS.",
+    "stats": {
+      "handoffs": "Préstamos completados",
+      "vouches": "Avales",
+      "listings": "Tus anuncios"
+    },
+    "myListings": "Tus anuncios",
+    "noListings": "Todavía no has publicado nada."
+  },
+  "trustBadge": {
+    "tier0": "Nivel 0",
+    "tier1": "Nivel 1",
+    "tier2": "Nivel 2"
+  },
   "footer": {
-    "note": "Hecho en Barcelona. Fase 0 en construcción."
+    "note": "Hecho en Barcelona. Fase 1 en construcción."
   }
 }

@@ -4,72 +4,195 @@
     "description": "Share tools, equipment, and skills with your neighbours in Poblenou."
   },
   "nav": {
+    "explore": "Explore",
+    "map": "Map",
+    "requests": "Requests",
+    "profile": "Profile",
+    "newListing": "List something",
     "signIn": "Sign in"
   },
   "home": {
     "eyebrow": "Poblenou, Barcelona",
-    "title": "Share tools, equipment, and skills with your neighbours",
-    "subtitle": "Handimen is a neighbourhood network that combines a social feed with peer-to-peer lending. Borrow, rent, or share for free — and find out who nearby can lend a hand.",
-    "cta": {
-      "primary": "Explore the neighbourhood",
-      "secondary": "How it works"
+    "title": "Share tools, equipment and skills with your neighbours",
+    "subtitle": "A neighbourhood network for lending what you already own — for free or for a small fee. Borrow a drill, rent a cargo bike, or ask for a hand.",
+    "ctaPrimary": "Explore the neighbourhood",
+    "ctaSecondary": "See the map",
+    "stats": {
+      "listings": "listings nearby",
+      "free": "free to borrow",
+      "neighbours": "neighbours"
     },
-    "features": {
-      "title": "Everything you need to share",
-      "subtitle": "The Phase 0 foundation is ready. These are the pieces already holding the product up.",
-      "items": {
-        "feed": {
-          "title": "Neighbourhood feed",
-          "description": "Post what you have or what you need. Reactions and comments so the neighbourhood can respond."
-        },
-        "lending": {
-          "title": "Lending & renting",
-          "description": "Free or paid listings with requests, a calendar, and in-person pickup."
-        },
-        "trust": {
-          "title": "Tiered trust",
-          "description": "Progressive verification, two-way reviews, and community vouching."
-        },
-        "local": {
-          "title": "Local discovery",
-          "description": "Radius search with PostGIS, category filters, and private communities."
-        }
-      }
+    "feed": {
+      "title": "What's happening in Poblenou",
+      "subtitle": "Neighbours asking for a hand, sharing what they just lent, and tips for the block.",
+      "empty": "No posts yet."
     },
-    "trust": {
-      "title": "Trust, in tiers",
-      "subtitle": "Verification scales with risk — keeping cost low while safety grows.",
-      "items": {
-        "tier0": {
-          "title": "Tier 0 · Free",
-          "description": "Verified email, completed profile, reviews, reporting, and vouching."
-        },
-        "tier1": {
-          "title": "Tier 1 · Phone",
-          "description": "Only for paid listings or a first lend. Keeps SMS spend low."
-        },
-        "tier2": {
-          "title": "Tier 2 · Identity",
-          "description": "ID verification for high-value rentals (Phase 3)."
-        }
-      }
-    },
-    "categories": {
-      "title": "Categories",
-      "subtitle": "From power tools to skills and one-off help."
-    },
-    "release": {
-      "title": "Phase 0 · Foundation ready",
-      "items": {
-        "monorepo": "pnpm + Turborepo monorepo with shared packages",
-        "db": "Postgres + PostGIS schema with RLS and migrations",
-        "payments": "PaymentsProvider interface with a mock provider",
-        "i18n": "Internationalisation es / en (with a Catalan slot reserved)",
-        "ci": "CI, types, and tests green"
-      }
+    "featured": {
+      "title": "Popular right now",
+      "subtitle": "Recently listed near you.",
+      "seeAll": "See all"
     }
   },
+  "categories": {
+    "power_tools": "Power tools",
+    "garden_outdoors": "Garden & outdoors",
+    "kitchen": "Kitchen",
+    "sports_camping": "Sports & camping",
+    "electronics": "Electronics",
+    "home_cleaning": "Home & cleaning",
+    "automotive": "Automotive",
+    "party_events": "Party & events",
+    "skills": "Skills",
+    "help_time": "Help & time"
+  },
+  "listing": {
+    "free": "Free",
+    "rent": "For rent",
+    "freeToBorrow": "Free to borrow",
+    "units": {
+      "hour": "hour",
+      "day": "day",
+      "week": "week"
+    },
+    "owner": "Owner",
+    "deposit": "Deposit",
+    "pickup": "Pickup",
+    "about": "About this listing",
+    "posted": "Posted {time}",
+    "yours": "This is your listing",
+    "backToExplore": "Back to explore",
+    "notFound": "Listing not found."
+  },
+  "explore": {
+    "title": "Explore the neighbourhood",
+    "subtitle": "Filter what neighbours are lending nearby.",
+    "search": "Search",
+    "searchPlaceholder": "Drill, projector, cargo bike…",
+    "category": "Category",
+    "anyCategory": "All categories",
+    "terms": "Price",
+    "anyTerms": "Free or for rent",
+    "freeOnly": "Free only",
+    "rentOnly": "For rent only",
+    "type": "Type",
+    "anyType": "Any type",
+    "types": {
+      "tool": "Tool",
+      "equipment": "Equipment",
+      "skill": "Skill",
+      "service": "Service"
+    },
+    "apply": "Apply filters",
+    "reset": "Reset",
+    "resultsCount": "{count} listings",
+    "empty": "Nothing matches those filters yet."
+  },
+  "map": {
+    "title": "The neighbourhood map",
+    "subtitle": "A stylized view of Poblenou. Tap a pin to see what's there.",
+    "sea": "Sea",
+    "park": "Park",
+    "close": "Close",
+    "legendFree": "Free to borrow",
+    "legendRent": "For rent",
+    "count": "{count} listings on the map",
+    "viewListing": "View listing"
+  },
+  "request": {
+    "title": "Request to borrow",
+    "listTitle": "Your requests",
+    "subtitle": "Pick your dates and send a short message to the owner.",
+    "startDate": "From",
+    "endDate": "To",
+    "message": "Message",
+    "messagePlaceholder": "Hi! I'd need it this weekend for a small moving job.",
+    "submit": "Send request",
+    "price": "Price",
+    "deposit": "Deposit held until return",
+    "escrowNote": "Payment is simulated in this demo — the escrow flow is real, the money is not.",
+    "outgoing": "Your requests",
+    "incoming": "Requests for your items",
+    "empty": "No requests yet.",
+    "status": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "active": "Out on loan",
+      "returned": "Returned",
+      "declined": "Declined",
+      "cancelled": "Cancelled"
+    },
+    "payment": {
+      "label": "Payment",
+      "none": "No payment",
+      "pending": "Pending",
+      "authorized": "Held",
+      "captured": "Charged",
+      "released": "Released to owner",
+      "refunded": "Refunded",
+      "cancelled": "Cancelled",
+      "failed": "Failed"
+    },
+    "actions": {
+      "approve": "Approve",
+      "decline": "Decline",
+      "activate": "Mark picked up",
+      "return": "Mark returned",
+      "cancel": "Cancel"
+    }
+  },
+  "newListing": {
+    "title": "List something",
+    "subtitle": "Share a tool, a piece of equipment, or a skill with the neighbourhood.",
+    "fields": {
+      "type": "What are you sharing?",
+      "terms": "Price",
+      "category": "Category",
+      "title": "Title",
+      "description": "Description",
+      "price": "Price (€)",
+      "priceUnit": "Per",
+      "deposit": "Deposit (€)",
+      "pickup": "Pickup location"
+    },
+    "pickupHint": "Simulated for now — listings appear near the centre of Poblenou.",
+    "termsFree": "Free to borrow",
+    "termsRent": "For rent",
+    "submit": "Publish listing",
+    "cancel": "Cancel",
+    "errors": {
+      "invalid_fields": "Add a title (3+ characters) and a description.",
+      "verify_email": "Verify your email before listing something.",
+      "phone_required_for_paid": "Verify your phone to list a paid rental. It keeps the neighbourhood trustworthy without costing us much.",
+      "phone_required_first_lend": "Verify your phone before your first listing.",
+      "not_allowed": "You can't publish this listing yet."
+    },
+    "verifyPhone": "Verify phone (demo)"
+  },
+  "profile": {
+    "title": "Your profile",
+    "trustTitle": "Your trust level",
+    "trustSubtitle": "Verification scales with risk, so we only ask for what's needed.",
+    "email": "Email",
+    "phone": "Phone",
+    "identity": "Identity",
+    "verified": "Verified",
+    "notVerified": "Not verified",
+    "verifyPhone": "Verify phone (demo)",
+    "verifyPhoneNote": "In production this sends a one-time code by SMS.",
+    "stats": {
+      "handoffs": "Completed handoffs",
+      "vouches": "Vouches",
+      "listings": "Your listings"
+    },
+    "myListings": "Your listings",
+    "noListings": "You haven't listed anything yet."
+  },
+  "trustBadge": {
+    "tier0": "Tier 0",
+    "tier1": "Tier 1",
+    "tier2": "Tier 2"
+  },
   "footer": {
-    "note": "Made in Barcelona. Phase 0 in progress."
+    "note": "Made in Barcelona. Phase 1 in progress."
   }
 }

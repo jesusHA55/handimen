@@ -15,6 +15,26 @@ See [`docs/plan.md`](./docs/plan.md) for the full product & technical plan.
   payments), `packages/db` (types + clients)
 - **Mobile (Phase 4):** Expo SDK 57 + expo-router
 
+## What's in the app (Phase 1)
+
+The app runs on a **mock data layer** (`packages/core`) so every screen works
+without a Supabase connection yet — by design, the stores are drop-in replaceable.
+
+| Route | What it does |
+|---|---|
+| `/` | Neighbourhood feed: posts with working likes + featured listings |
+| `/explore` | Listings with search, category / price / type filters |
+| `/map` | Stylized, keyless mock map of Poblenou with clickable pins |
+| `/listings/[id]` | Listing detail + request form |
+| `/listings/new` | Publish a listing (exercises the Tier-1 phone gate) |
+| `/requests` | Outgoing + incoming requests with the mock escrow lifecycle |
+| `/profile` | Trust tier, verification state, mock phone verification |
+
+`es` is the default locale (`/`); English lives under `/en`.
+
+To publish a **paid** listing while unverified, the form blocks and offers a
+mock "verify phone" step — the tiered trust policy in action.
+
 ## Layout
 
 ```
