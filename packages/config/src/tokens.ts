@@ -9,19 +9,19 @@
  */
 
 export const colors = {
-  /** Primary brand — a trustworthy workshop teal. */
+  /** Primary brand — the light blue sampled from the logo (#40A9DA). */
   brand: {
-    50: "#f0fdfa",
-    100: "#ccfbf1",
-    200: "#99f6e4",
-    300: "#5eead4",
-    400: "#2dd4bf",
-    500: "#14b8a6",
-    600: "#0d9488",
-    700: "#0f766e",
-    800: "#115e59",
-    900: "#134e4a",
-    950: "#042f2e",
+    50: "#eef8fd",
+    100: "#d9eefa",
+    200: "#b6e0f6",
+    300: "#85ccef",
+    400: "#54b8e5",
+    500: "#40a9da",
+    600: "#2b8fbf",
+    700: "#24739b",
+    800: "#235f80",
+    900: "#22506b",
+    950: "#163447",
   },
   /** Warm accent — used for highlights, badges, CTAs we want to pop. */
   accent: {
@@ -49,6 +49,9 @@ export const radii = {
   xl: "1.5rem",
   pill: "9999px",
 } as const;
+
+/** Readable ink for text placed on top of the brand blue. */
+export const onBrand = "#062431";
 
 export const fonts = {
   sans: 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',

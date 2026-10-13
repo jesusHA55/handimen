@@ -1,6 +1,7 @@
 "use client";
 
-import { Compass, Map, Plus, User, Inbox, HandHeart } from "lucide-react";
+import { Compass, Map, Plus, User, Inbox } from "lucide-react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 
 import { LanguageSwitcher } from "@/components/language-switcher";
@@ -28,9 +29,14 @@ export function SiteHeader({ user }: { user: HeaderUser }) {
     <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 px-4">
         <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
-          <span className="grid size-8 place-items-center rounded-lg bg-primary text-primary-foreground">
-            <HandHeart className="size-4" aria-hidden />
-          </span>
+          <Image
+            src="/logo.png"
+            alt=""
+            width={36}
+            height={36}
+            priority
+            className="size-9 object-contain"
+          />
           <span className="hidden sm:inline">Handimen</span>
         </Link>
 

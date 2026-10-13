@@ -1,29 +1,31 @@
 /**
- * Tailwind v4 theme for Handimen web.
- * Values mirror packages/config/src/tokens.ts — update both together.
+ * Tailwind v4 theme for Handimen.
+ *
+ * Primary brand colour is sampled from the logo: rgb(64, 170, 218) = #40A9DA
+ * (oklch(0.6953 0.1186 232.50)). Values mirror packages/config/src/tokens.ts.
  */
 
 :root {
   --radius: 0.75rem;
 
-  --background: oklch(0.99 0.005 180);
-  --foreground: oklch(0.21 0.02 240);
+  --background: oklch(0.99 0.006 230);
+  --foreground: oklch(0.24 0.02 240);
 
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.21 0.02 240);
+  --card-foreground: oklch(0.24 0.02 240);
 
-  --muted: oklch(0.96 0.008 200);
-  --muted-foreground: oklch(0.5 0.02 220);
+  --muted: oklch(0.965 0.012 230);
+  --muted-foreground: oklch(0.52 0.03 235);
 
-  --border: oklch(0.91 0.008 220);
-  --input: oklch(0.91 0.008 220);
-  --ring: oklch(0.6 0.11 180);
+  --border: oklch(0.91 0.015 230);
+  --input: oklch(0.91 0.015 230);
+  --ring: oklch(0.6953 0.1186 232.5);
 
-  /* brand = teal 600-ish */
-  --primary: oklch(0.6 0.11 180);
-  --primary-foreground: oklch(0.99 0.01 180);
+  /* brand — the logo's light blue. Dark ink keeps text readable on it. */
+  --primary: oklch(0.6953 0.1186 232.5);
+  --primary-foreground: oklch(0.2454 0.0426 230.68);
 
-  /* accent = amber 500-ish */
+  /* accent — warm amber, kept as a complement for paid/CTA highlights */
   --accent: oklch(0.77 0.15 75);
   --accent-foreground: oklch(0.25 0.04 70);
 
@@ -35,21 +37,21 @@
 }
 
 .dark {
-  --background: oklch(0.18 0.015 240);
-  --foreground: oklch(0.96 0.01 200);
+  --background: oklch(0.19 0.02 235);
+  --foreground: oklch(0.96 0.01 230);
 
-  --card: oklch(0.22 0.015 240);
-  --card-foreground: oklch(0.96 0.01 200);
+  --card: oklch(0.23 0.02 235);
+  --card-foreground: oklch(0.96 0.01 230);
 
-  --muted: oklch(0.27 0.015 240);
-  --muted-foreground: oklch(0.7 0.02 220);
+  --muted: oklch(0.28 0.02 235);
+  --muted-foreground: oklch(0.72 0.02 230);
 
-  --border: oklch(0.3 0.015 240);
-  --input: oklch(0.3 0.015 240);
-  --ring: oklch(0.65 0.12 180);
+  --border: oklch(0.31 0.02 235);
+  --input: oklch(0.31 0.02 235);
+  --ring: oklch(0.7899 0.0918 229.59);
 
-  --primary: oklch(0.7 0.12 180);
-  --primary-foreground: oklch(0.16 0.02 200);
+  --primary: oklch(0.7899 0.0918 229.59);
+  --primary-foreground: oklch(0.2454 0.0426 230.68);
 
   --accent: oklch(0.8 0.14 75);
   --accent-foreground: oklch(0.22 0.03 70);
