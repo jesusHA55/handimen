@@ -1,0 +1,33 @@
+# Handimen Supabase local config.
+# Regenerate with `supabase init` if the CLI adds fields for a newer version.
+
+project_id = "handimen"
+
+[api]
+enabled = true
+port = 54321
+
+[db]
+port = 54322
+major_version = 17
+
+[studio]
+enabled = true
+
+[auth]
+enabled = true
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["http://localhost:3000"]
+
+[auth.email]
+enable_signup = true
+enable_confirmations = false
+
+[auth.external.google]
+enabled = false
+
+[storage]
+enabled = true
+
+[analytics]
+enabled = false

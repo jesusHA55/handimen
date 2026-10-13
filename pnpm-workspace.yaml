@@ -1,0 +1,19 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+# Allow these packages to run their postinstall/build scripts (pnpm blocks by default).
+allowBuilds:
+  '@parcel/watcher': true
+  '@swc/core': true
+  unrs-resolver: true
+
+minimumReleaseAgeExclude:
+  - "@turbo/darwin-64@2.11.8"
+  - "@turbo/darwin-arm64@2.11.8"
+  - "@turbo/linux-64@2.11.8"
+  - "@turbo/linux-arm64@2.11.8"
+  - "@turbo/windows-64@2.11.8"
+  - "@turbo/windows-arm64@2.11.8"
+  - lucide-react@1.56.0
+  - turbo@2.11.8

@@ -1,0 +1,75 @@
+{
+  "meta": {
+    "title": "Handimen — Share what you have",
+    "description": "Share tools, equipment, and skills with your neighbours in Poblenou."
+  },
+  "nav": {
+    "signIn": "Sign in"
+  },
+  "home": {
+    "eyebrow": "Poblenou, Barcelona",
+    "title": "Share tools, equipment, and skills with your neighbours",
+    "subtitle": "Handimen is a neighbourhood network that combines a social feed with peer-to-peer lending. Borrow, rent, or share for free — and find out who nearby can lend a hand.",
+    "cta": {
+      "primary": "Explore the neighbourhood",
+      "secondary": "How it works"
+    },
+    "features": {
+      "title": "Everything you need to share",
+      "subtitle": "The Phase 0 foundation is ready. These are the pieces already holding the product up.",
+      "items": {
+        "feed": {
+          "title": "Neighbourhood feed",
+          "description": "Post what you have or what you need. Reactions and comments so the neighbourhood can respond."
+        },
+        "lending": {
+          "title": "Lending & renting",
+          "description": "Free or paid listings with requests, a calendar, and in-person pickup."
+        },
+        "trust": {
+          "title": "Tiered trust",
+          "description": "Progressive verification, two-way reviews, and community vouching."
+        },
+        "local": {
+          "title": "Local discovery",
+          "description": "Radius search with PostGIS, category filters, and private communities."
+        }
+      }
+    },
+    "trust": {
+      "title": "Trust, in tiers",
+      "subtitle": "Verification scales with risk — keeping cost low while safety grows.",
+      "items": {
+        "tier0": {
+          "title": "Tier 0 · Free",
+          "description": "Verified email, completed profile, reviews, reporting, and vouching."
+        },
+        "tier1": {
+          "title": "Tier 1 · Phone",
+          "description": "Only for paid listings or a first lend. Keeps SMS spend low."
+        },
+        "tier2": {
+          "title": "Tier 2 · Identity",
+          "description": "ID verification for high-value rentals (Phase 3)."
+        }
+      }
+    },
+    "categories": {
+      "title": "Categories",
+      "subtitle": "From power tools to skills and one-off help."
+    },
+    "release": {
+      "title": "Phase 0 · Foundation ready",
+      "items": {
+        "monorepo": "pnpm + Turborepo monorepo with shared packages",
+        "db": "Postgres + PostGIS schema with RLS and migrations",
+        "payments": "PaymentsProvider interface with a mock provider",
+        "i18n": "Internationalisation es / en (with a Catalan slot reserved)",
+        "ci": "CI, types, and tests green"
+      }
+    }
+  },
+  "footer": {
+    "note": "Made in Barcelona. Phase 0 in progress."
+  }
+}

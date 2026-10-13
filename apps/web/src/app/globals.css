@@ -1,0 +1,14 @@
+@import "tailwindcss";
+@import "../../../../packages/config/theme.css";
+
+/* Class-based dark mode so we can toggle it later. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+* {
+  border-color: var(--color-border);
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}

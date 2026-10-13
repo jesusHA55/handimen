@@ -1,0 +1,11 @@
+{
+  "name": "@handimen/config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "files": ["theme.css", "src"],
+  "exports": {
+    "./theme.css": "./theme.css",
+    "./tokens": "./src/tokens.ts"
+  }
+}

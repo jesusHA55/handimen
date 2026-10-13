@@ -1,0 +1,75 @@
+{
+  "meta": {
+    "title": "Handimen — Comparte lo que tienes",
+    "description": "Comparte herramientas, equipo y habilidades con tus vecinos de Poblenou."
+  },
+  "nav": {
+    "signIn": "Entrar"
+  },
+  "home": {
+    "eyebrow": "Poblenou, Barcelona",
+    "title": "Comparte herramientas, equipo y habilidades con tus vecinos",
+    "subtitle": "Handimen es una red de barrio que combina un muro social con el préstamo entre vecinos. Pide prestado, alquila o comparte gratis — y descubre quién de tu barrio puede echarte una mano.",
+    "cta": {
+      "primary": "Explorar el barrio",
+      "secondary": "Cómo funciona"
+    },
+    "features": {
+      "title": "Todo lo que necesitas para compartir",
+      "subtitle": "La base de la Fase 0 está lista. Estas son las piezas que ya sostienen el producto.",
+      "items": {
+        "feed": {
+          "title": "Muro de barrio",
+          "description": "Publica lo que tienes o lo que te hace falta. Reacciones y comentarios para que el barrio responda."
+        },
+        "lending": {
+          "title": "Préstamo y alquiler",
+          "description": "Listados gratuitos o de pago, con solicitudes, calendario y recogida en persona."
+        },
+        "trust": {
+          "title": "Confianza por niveles",
+          "description": "Verificación progresiva, reseñas bidireccionales y avales de la comunidad."
+        },
+        "local": {
+          "title": "Descubrimiento local",
+          "description": "Búsqueda por radio con PostGIS, filtros por categoría y comunidades privadas."
+        }
+      }
+    },
+    "trust": {
+      "title": "Confianza, por niveles",
+      "subtitle": "La verificación escala según el riesgo — así mantenemos el coste bajo mientras crece la seguridad.",
+      "items": {
+        "tier0": {
+          "title": "Nivel 0 · Gratis",
+          "description": "Email verificado, perfil completo, reseñas, reportes y avales."
+        },
+        "tier1": {
+          "title": "Nivel 1 · Teléfono",
+          "description": "Solo para listados de pago o el primer préstamo. Mantiene el gasto en SMS bajo."
+        },
+        "tier2": {
+          "title": "Nivel 2 · Identidad",
+          "description": "Verificación de identidad para alquileres de alto valor (Fase 3)."
+        }
+      }
+    },
+    "categories": {
+      "title": "Categorías",
+      "subtitle": "Desde herramientas eléctricas hasta habilidades y ayuda puntual."
+    },
+    "release": {
+      "title": "Fase 0 · Base preparada",
+      "items": {
+        "monorepo": "Monorepo pnpm + Turborepo con paquetes compartidos",
+        "db": "Esquema Postgres + PostGIS con RLS y migraciones",
+        "payments": "Interfaz PaymentsProvider con proveedor simulado",
+        "i18n": "Internacionalización es / en (con hueco para el catalán)",
+        "ci": "CI, tipos y tests en verde"
+      }
+    }
+  },
+  "footer": {
+    "note": "Hecho en Barcelona. Fase 0 en construcción."
+  }
+}

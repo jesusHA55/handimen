@@ -1,0 +1,20 @@
+{
+  "name": "@handimen/db",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "echo \"lint: typecheck covers @handimen/db\""
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.117.3"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  }
+}
