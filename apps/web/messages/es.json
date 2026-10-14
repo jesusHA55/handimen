@@ -186,7 +186,12 @@
       "listings": "Tus anuncios"
     },
     "myListings": "Tus anuncios",
-    "noListings": "Todavía no has publicado nada."
+    "noListings": "Todavía no has publicado nada.",
+    "seedCta": "Añadir contenido de ejemplo",
+    "seedNote": "Crea un anuncio de inicio y una solicitud entrante de un vecino, para que pruebes el flujo de préstamo.",
+    "signInTitle": "Entra para ver tu perfil",
+    "signInBody": "Tu nivel de confianza, reseñas y anuncios están detrás de un enlace mágico.",
+    "signInCta": "Entrar"
   },
   "messages": {
     "title": "Mensajes",

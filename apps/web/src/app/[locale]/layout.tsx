@@ -45,7 +45,7 @@ export default async function LocaleLayout({
 
   const t = await getTranslations("footer");
   const { owner, signedIn, email, messages, userId } = await getStores();
-  const unreadCount = await messages.unreadCount(userId);
+  const unreadCount = userId ? await messages.unreadCount(userId) : 0;
 
   const user = {
     displayName: owner?.displayName ?? "Tú",

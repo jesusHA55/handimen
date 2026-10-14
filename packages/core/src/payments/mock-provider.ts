@@ -16,7 +16,7 @@ import type {
 const ZERO_EUR: Money = { amount: 0, currency: "EUR" };
 
 /** Allowed lifecycle transitions. Enforced so the mock behaves like a real PSP. */
-const ALLOWED_TRANSITIONS: Record<PaymentIntentStatus, readonly PaymentIntentStatus[]> = {
+export const ALLOWED_TRANSITIONS: Record<PaymentIntentStatus, readonly PaymentIntentStatus[]> = {
   pending: ["authorized", "cancelled", "failed"],
   authorized: ["captured", "cancelled", "failed"],
   captured: ["released", "refunded"],
@@ -25,6 +25,14 @@ const ALLOWED_TRANSITIONS: Record<PaymentIntentStatus, readonly PaymentIntentSta
   cancelled: [],
   failed: [],
 };
+
+/** Shared guard so persisted payment state uses the same rules as the provider. */
+export function canTransitionPayment(
+  from: PaymentIntentStatus,
+  to: PaymentIntentStatus,
+): boolean {
+  return ALLOWED_TRANSITIONS[from].includes(to);
+}
 
 function assertValidMoney(money: Money, label: string): Money {
   if (!Number.isInteger(money.amount) || money.amount < 0) {

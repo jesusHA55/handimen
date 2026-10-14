@@ -30,7 +30,7 @@ export default async function ListingPage({
   const tReview = await getTranslations("review");
   const tMessages = await getTranslations("messages");
   const tCategories = await getTranslations("categories");
-  const isYours = listing.ownerId === userId;
+  const isYours = userId !== null && listing.ownerId === userId;
   const isRent = listing.terms === "rent";
 
   const ownerReviews = owner ? await reviews.listForUser(owner.id) : [];

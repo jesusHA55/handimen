@@ -285,6 +285,9 @@ importers:
 
   packages/db:
     dependencies:
+      '@handimen/core':
+        specifier: workspace:*
+        version: link:../core
       '@supabase/ssr':
         specifier: ^0.12.7
         version: 0.12.7(@supabase/supabase-js@2.117.3)

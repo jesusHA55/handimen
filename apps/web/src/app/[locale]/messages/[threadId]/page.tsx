@@ -18,6 +18,8 @@ export default async function ThreadPage({
   setRequestLocale(locale);
 
   const { messages: messagesStore, listings, userId } = await getStores();
+  if (!userId) notFound();
+
   const thread = await messagesStore.getThread(threadId);
   if (!thread) notFound();
 

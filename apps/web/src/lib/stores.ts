@@ -1,38 +1,42 @@
-import { CURRENT_USER_ID, getDemoBundle, type ListingOwner } from "@handimen/core";
+import type { ListingOwner } from "@handimen/core";
+import { createSupabaseStores, type SupabaseStores } from "@handimen/db/repositories";
+import type { SupabaseClient } from "@supabase/supabase-js";
+
+import type { Database } from "@handimen/db";
 
 import { getCurrentUser, type CurrentUser } from "./auth";
+import { getSupabaseServerClient } from "./supabase/server";
 
-export interface AppContext {
-  /** Identity all data is keyed to: the real user id, or the demo identity. */
-  userId: string;
-  /** The Supabase user, or null when browsing signed out. */
+export interface AppContext extends SupabaseStores {
+  /** Raw RLS-bound client, for the occasional query a repository doesn't cover. */
+  client: SupabaseClient<Database>;
+  /** The signed-in member, or null when browsing signed out. */
+  userId: string | null;
   authUser: CurrentUser | null;
   signedIn: boolean;
   email: string | null;
-  /** The active identity's profile record (drives the header + trust UI). */
+  /** The signed-in member's profile row, when there is one. */
   owner: ListingOwner | null;
-  listings: Awaited<ReturnType<typeof getDemoBundle>>["listings"];
-  requests: Awaited<ReturnType<typeof getDemoBundle>>["requests"];
-  reviews: Awaited<ReturnType<typeof getDemoBundle>>["reviews"];
-  messages: Awaited<ReturnType<typeof getDemoBundle>>["messages"];
-  social: Awaited<ReturnType<typeof getDemoBundle>>["social"];
 }
 
 /**
  * Single entry point for app data.
  *
- * Today it returns the seeded demo layer keyed to the signed-in user. When the
- * Supabase repositories land, only this function changes — pages stay as they are.
+ * Repositories are Supabase-backed and RLS-bound: the database — not the app —
+ * decides what the current member can read and write. Signed-out visitors can
+ * still browse (active listings and public profiles are publicly readable).
  */
 export async function getStores(): Promise<AppContext> {
+  const client = await getSupabaseServerClient();
   const authUser = await getCurrentUser();
-  const userId = authUser?.id ?? CURRENT_USER_ID;
 
-  const bundle = await getDemoBundle(userId, authUser?.displayName);
-  const owner = await bundle.listings.getOwner(userId);
+  const userId = authUser?.id ?? null;
+  const stores = createSupabaseStores(client, userId);
+  const owner = userId ? await stores.listings.getOwner(userId) : null;
 
   return {
-    ...bundle,
+    ...stores,
+    client,
     userId,
     authUser,
     signedIn: authUser !== null,

@@ -17,8 +17,9 @@ See [`docs/plan.md`](./docs/plan.md) for the full product & technical plan.
 
 ## What's in the app (Phase 1)
 
-The app runs on a **mock data layer** (`packages/core`) so every screen works
-without a Supabase connection yet — by design, the stores are drop-in replaceable.
+Data lives in **Supabase** (Postgres + RLS) and is reached through
+`apps/web/src/lib/stores.ts` → `getStores()`. Signed-out visitors can browse;
+writing needs a magic-link sign-in.
 
 | Route | What it does |
 |---|---|

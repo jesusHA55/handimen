@@ -17,7 +17,7 @@ export default async function MessagesPage({
 
   const t = await getTranslations("messages");
   const { messages, listings, userId } = await getStores();
-  const previews = await messages.listThreads(userId);
+  const previews = userId ? await messages.listThreads(userId) : [];
 
   const owners = await listings.getOwners(
     previews.map((preview) => preview.otherParticipantId),

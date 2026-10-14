@@ -186,7 +186,12 @@
       "listings": "Your listings"
     },
     "myListings": "Your listings",
-    "noListings": "You haven't listed anything yet."
+    "noListings": "You haven't listed anything yet.",
+    "seedCta": "Add demo content",
+    "seedNote": "Creates a starter listing plus an incoming request from a neighbour, so you can try the borrow flow.",
+    "signInTitle": "Sign in to see your profile",
+    "signInBody": "Your trust level, reviews and listings live behind a magic-link sign-in.",
+    "signInCta": "Sign in"
   },
   "messages": {
     "title": "Messages",

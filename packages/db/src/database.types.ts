@@ -279,6 +279,8 @@ export type Database = {
           id: string
           owner_id: string
           photos: string[]
+          pickup_lat: number | null
+          pickup_lng: number | null
           pickup_location: unknown
           price_cents: number | null
           price_unit: Database["public"]["Enums"]["price_unit"] | null
@@ -301,6 +303,8 @@ export type Database = {
           id?: string
           owner_id: string
           photos?: string[]
+          pickup_lat?: number | null
+          pickup_lng?: number | null
           pickup_location?: unknown
           price_cents?: number | null
           price_unit?: Database["public"]["Enums"]["price_unit"] | null
@@ -323,6 +327,8 @@ export type Database = {
           id?: string
           owner_id?: string
           photos?: string[]
+          pickup_lat?: number | null
+          pickup_lng?: number | null
           pickup_location?: unknown
           price_cents?: number | null
           price_unit?: Database["public"]["Enums"]["price_unit"] | null
@@ -508,11 +514,15 @@ export type Database = {
           created_at: string
           display_name: string
           email_verified: boolean
+          home_lat: number | null
+          home_lng: number | null
           home_location: unknown
           id: string
           id_verified: boolean
           neighbourhood: string | null
           phone_verified: boolean
+          rating: number
+          review_count: number
           updated_at: string
           vouches: number
         }
@@ -523,11 +533,15 @@ export type Database = {
           created_at?: string
           display_name: string
           email_verified?: boolean
+          home_lat?: number | null
+          home_lng?: number | null
           home_location?: unknown
           id: string
           id_verified?: boolean
           neighbourhood?: string | null
           phone_verified?: boolean
+          rating?: number
+          review_count?: number
           updated_at?: string
           vouches?: number
         }
@@ -538,11 +552,15 @@ export type Database = {
           created_at?: string
           display_name?: string
           email_verified?: boolean
+          home_lat?: number | null
+          home_lng?: number | null
           home_location?: unknown
           id?: string
           id_verified?: boolean
           neighbourhood?: string | null
           phone_verified?: boolean
+          rating?: number
+          review_count?: number
           updated_at?: string
           vouches?: number
         }

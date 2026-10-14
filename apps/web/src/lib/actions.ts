@@ -42,12 +42,20 @@ function intOrNull(formData: FormData, key: string): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
+/** Writes need a member; send visitors to sign-in and come back. */
+async function requireUserId(locale: string): Promise<string> {
+  const { userId } = await getStores();
+  if (!userId) redirect(localePath(locale, "/sign-in"));
+  return userId;
+}
+
 export async function createListingAction(
   _prev: FormState,
   formData: FormData,
 ): Promise<FormState> {
   const locale = str(formData, "locale") || "es";
-  const { listings, userId, owner } = await getStores();
+  const { listings, owner } = await getStores();
+  const userId = await requireUserId(locale);
 
   const terms = (str(formData, "terms") || "free") as ListingTerms;
   const gate = listingGate(terms, toSignals(owner));
@@ -90,7 +98,8 @@ export async function createListingAction(
 
 export async function createRequestAction(formData: FormData) {
   const locale = str(formData, "locale") || "es";
-  const { requests, listings, messages, userId } = await getStores();
+  const { listings, requests, messages } = await getStores();
+  const userId = await requireUserId(locale);
 
   const listingId = str(formData, "listingId");
   const request = await requests.create({
@@ -118,6 +127,8 @@ export async function createRequestAction(formData: FormData) {
 export async function advanceRequestAction(formData: FormData) {
   const locale = str(formData, "locale") || "es";
   const { requests } = await getStores();
+  await requireUserId(locale);
+
   const id = str(formData, "requestId");
   const action = str(formData, "requestAction");
 
@@ -132,20 +143,26 @@ export async function advanceRequestAction(formData: FormData) {
 }
 
 export async function toggleLikeAction(formData: FormData) {
-  const { social, userId } = await getStores();
+  const locale = str(formData, "locale") || "es";
+  const { social } = await getStores();
+  const userId = await requireUserId(locale);
+
   await social.toggleLike(str(formData, "postId"), userId);
   revalidatePath("/", "layout");
 }
 
 export async function verifyPhoneAction() {
   const { listings, userId } = await getStores();
+  if (!userId) return;
   await listings.verifyPhone(userId);
   revalidatePath("/", "layout");
 }
 
 export async function startThreadAction(formData: FormData) {
   const locale = str(formData, "locale") || "es";
-  const { messages, userId } = await getStores();
+  const { messages } = await getStores();
+  const userId = await requireUserId(locale);
+
   const ownerId = str(formData, "ownerId");
   if (!ownerId) return;
 
@@ -164,10 +181,11 @@ export async function startThreadAction(formData: FormData) {
 
 export async function sendMessageAction(formData: FormData) {
   const locale = str(formData, "locale") || "es";
-  const { messages, userId } = await getStores();
+  const { messages } = await getStores();
+  const userId = await requireUserId(locale);
+
   const threadId = str(formData, "threadId");
   const body = str(formData, "body");
-
   if (body) {
     await messages.sendMessage({ threadId, senderId: userId, body });
   }
@@ -178,15 +196,89 @@ export async function sendMessageAction(formData: FormData) {
 
 export async function createReviewAction(formData: FormData) {
   const locale = str(formData, "locale") || "es";
-  const { reviews, userId } = await getStores();
-  const rating = Number.parseInt(str(formData, "rating"), 10);
+  const { reviews } = await getStores();
+  const userId = await requireUserId(locale);
 
+  const rating = Number.parseInt(str(formData, "rating"), 10);
   await reviews.create({
     requestId: str(formData, "requestId"),
     reviewerId: userId,
     rating: Number.isFinite(rating) ? rating : 5,
     comment: str(formData, "comment") || null,
   });
+
+  revalidatePath("/", "layout");
+  redirect(localePath(locale, "/requests"));
+}
+
+/**
+ * Gives a brand-new member something to look at: a starter listing plus an
+ * incoming request from a neighbour, so the escrow lifecycle is demoable
+ * without needing a second human.
+ */
+export async function seedDemoContentAction(formData: FormData) {
+  const locale = str(formData, "locale") || "es";
+  const { client, listings, requests, messages } = await getStores();
+  const userId = await requireUserId(locale);
+
+  const existing = await listings.list({ ownerId: userId });
+  if (existing.length > 0) {
+    redirect(localePath(locale, "/profile"));
+  }
+
+  const listing = await listings.create({
+    ownerId: userId,
+    type: "tool",
+    terms: "rent",
+    category: "power_tools",
+    title: "Taladro ligero Makita",
+    description:
+      "Taladro ligero con batería y cargador. Lo alquilo por días para trabajos pequeños en casa. Recogida en la Rambla.",
+    priceCents: 1000,
+    priceUnit: "day",
+    depositCents: 3000,
+    lat: 41.4002,
+    lng: 2.1985,
+    photos: ["🛠️"],
+  });
+
+  const { data: neighbour } = await client
+    .from("profiles")
+    .select("id")
+    .neq("id", userId)
+    .limit(1)
+    .maybeSingle();
+
+  if (neighbour) {
+    const start = new Date(Date.now() + 86_400_000);
+    const end = new Date(Date.now() + 4 * 86_400_000);
+
+    await requests.create({
+      listingId: listing.id,
+      requesterId: neighbour.id,
+      startDate: start.toISOString(),
+      endDate: end.toISOString(),
+      message: "¡Hola! ¿Lo tendrías libre este finde? Es para montar una estantería.",
+    });
+
+    await messages.getOrCreateThread({
+      participantA: userId,
+      participantB: neighbour.id,
+      context: { listingId: listing.id, listingTitle: listing.title },
+    });
+
+    await messages.sendMessage({
+      threadId: (
+        await messages.getOrCreateThread({
+          participantA: userId,
+          participantB: neighbour.id,
+          context: { listingId: listing.id, listingTitle: listing.title },
+        })
+      ).id,
+      senderId: neighbour.id,
+      body: "¡Buenas! Te acabo de enviar una solicitud para el taladro. ¿Te va bien el sábado por la mañana?",
+    });
+  }
 
   revalidatePath("/", "layout");
   redirect(localePath(locale, "/requests"));

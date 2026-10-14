@@ -41,3 +41,15 @@ export interface RequestFilter {
   ownerId?: string;
   listingId?: string;
 }
+
+/** Both the in-memory demo store and the Supabase implementation satisfy this. */
+export interface RequestsStore {
+  list(filter?: RequestFilter): Promise<RentalRequest[]>;
+  get(id: string): Promise<RentalRequest | null>;
+  create(input: CreateRequestInput): Promise<RentalRequest>;
+  approve(id: string): Promise<RentalRequest>;
+  decline(id: string): Promise<RentalRequest>;
+  activate(id: string): Promise<RentalRequest>;
+  markReturned(id: string): Promise<RentalRequest>;
+  cancel(id: string): Promise<RentalRequest>;
+}

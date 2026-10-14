@@ -16,22 +16,26 @@ export default async function RequestsPage({
   const t = await getTranslations("request");
   const { requests: store, reviews, userId } = await getStores();
 
-  const [outgoing, incoming] = await Promise.all([
-    store.list({ requesterId: userId }),
-    store.list({ ownerId: userId }),
-  ]);
+  const [outgoing, incoming] = userId
+    ? await Promise.all([
+        store.list({ requesterId: userId }),
+        store.list({ ownerId: userId }),
+      ])
+    : [[], []];
 
   // A completed borrow can still be reviewed by the requester until they do.
   const reviewable = new Set(
-    (
-      await Promise.all(
-        outgoing
-          .filter((request) => request.status === "returned")
-          .map(async (request) =>
-            (await reviews.hasReviewed(request.id, userId)) ? null : request.id,
-          ),
-      )
-    ).filter((id): id is string => id !== null),
+    userId
+      ? (
+          await Promise.all(
+            outgoing
+              .filter((request) => request.status === "returned")
+              .map(async (request) =>
+                (await reviews.hasReviewed(request.id, userId)) ? null : request.id,
+              ),
+          )
+        ).filter((id): id is string => id !== null)
+      : [],
   );
 
   const sections = [

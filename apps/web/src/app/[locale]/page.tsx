@@ -29,7 +29,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     posts.map(async (post) => ({
       post,
       author: ownerMap.get(post.authorId) ?? null,
-      liked: await social.hasLiked(post.id, userId),
+      liked: userId ? await social.hasLiked(post.id, userId) : false,
       count: await social.reactionCount(post.id),
     })),
   );
@@ -105,7 +105,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                       </div>
                       <p className="text-sm">{post.body}</p>
                       <div className="flex items-center gap-2">
-                        <LikeButton postId={post.id} count={count} liked={liked} />
+                        <LikeButton postId={post.id} count={count} liked={liked} locale={locale} />
                         {post.listingId ? (
                           <Button size="sm" variant="ghost" asChild>
                             <Link href={`/listings/${post.listingId}`}>

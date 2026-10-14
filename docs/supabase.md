@@ -24,7 +24,21 @@ There are two paths. They're not exclusive — most teams do **A then B**.
 - [ ] **Verified sending domain** in Resend → switch the sender to
       `no-reply@<domain>`. Until then Resend only delivers to the Resend account
       owner's address, so magic links work for that one email only.
-- [ ] Swap the mock repositories for Supabase-backed implementations
+- [x] Repositories swapped to Supabase (`packages/db/src/repositories.ts`) —
+      listings, requests (with a simulated escrow ledger), reviews, messages and
+      the feed all read/write through RLS
+- [ ] Payments: replace the simulated ledger with Stripe Connect (Phase 3)
+- [ ] Delete the now-unused in-memory demo layer in `packages/core`
+
+### What's real vs simulated
+
+| Area | State |
+|---|---|
+| Listings, requests, reviews, messages, feed, profiles | **Real** — Postgres + RLS |
+| Auth | **Real** — magic link via Supabase, delivered through Resend |
+| Payments / escrow | **Simulated** — `transactions` rows move through the real state machine (`authorized → captured → released`), but no money moves |
+| Avatars | Placeholder emoji derived from the member id until photo upload exists |
+| Radius search | Filtered in JS; moves to `ST_DWithin` as the dataset grows |
 
 > Migrations were applied via the Management API (no local Postgres/CLI needed).
 > The CLI is only required for `supabase db push` / `pnpm db:types` workflows.
