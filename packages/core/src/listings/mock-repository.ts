@@ -7,24 +7,8 @@ import type {
   ListingFilter,
   ListingOwner,
   ListingStatus,
+  ListingsRepository,
 } from "./types";
-
-export interface ListingsRepository {
-  list(filter?: ListingFilter): Promise<Listing[]>;
-  get(id: string): Promise<Listing | null>;
-  getOwner(id: string): Promise<ListingOwner | null>;
-  getOwners(ids: string[]): Promise<ListingOwner[]>;
-  create(input: CreateListingInput): Promise<Listing>;
-  setStatus(id: string, status: ListingStatus): Promise<Listing | null>;
-  /** Mock Tier-1 verification toggle for the current demo user. */
-  verifyPhone(ownerId: string): Promise<ListingOwner | null>;
-  /** Mock Tier-2 identity verification toggle. */
-  verifyIdentity(ownerId: string): Promise<ListingOwner | null>;
-  /** Fold a new star rating into the owner's aggregate. */
-  addReview(ownerId: string, rating: number): Promise<ListingOwner | null>;
-  /** Bump a member's completed-handoff count. */
-  incrementHandoffs(ownerId: string): Promise<ListingOwner | null>;
-}
 
 function matches(listing: Listing, filter: ListingFilter | undefined): boolean {
   if (!filter) return true;

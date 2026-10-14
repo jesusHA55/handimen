@@ -12,6 +12,8 @@ import { Link } from "@/i18n/navigation";
 import { addCommentAction, deleteCommentAction } from "@/lib/actions";
 import { getStores } from "@/lib/stores";
 
+export const instant = false;
+
 export default async function PostPage({
   params,
 }: {

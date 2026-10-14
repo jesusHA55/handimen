@@ -5,6 +5,8 @@ import { ReviewForm } from "@/components/review-form";
 import type { Locale } from "@/lib/format";
 import { getStores } from "@/lib/stores";
 
+export const instant = false;
+
 export default async function RequestsPage({
   params,
 }: {

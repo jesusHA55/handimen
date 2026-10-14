@@ -6,7 +6,10 @@ import { useSyncExternalStore } from "react";
 import { formatDate, formatRelativeTime } from "@/lib/format";
 
 const subscribe = () => () => {};
-const getSnapshot = () => true;
+// Deliberately derived from `window`, not a bare `true`: if React ever evaluates
+// the snapshot during a server pass, this still reports "not client" instead of
+// letting the relative-time formatter reach `Date.now()`.
+const getSnapshot = () => typeof window !== "undefined";
 const getServerSnapshot = () => false;
 
 /**

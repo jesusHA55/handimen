@@ -9,6 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { getStores } from "@/lib/stores";
 
+// Reads the session and per-user data, so it can't be prerendered.
+export const instant = false;
+
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);

@@ -7,6 +7,8 @@ import { RelativeTime } from "@/components/relative-time";
 import { Link } from "@/i18n/navigation";
 import { getStores } from "@/lib/stores";
 
+export const instant = false;
+
 export default async function MessagesPage({
   params,
 }: {

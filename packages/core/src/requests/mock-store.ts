@@ -1,6 +1,6 @@
 import { createMockPaymentsProvider } from "../payments/mock-provider";
 import type { PaymentsProvider } from "../payments/types";
-import type { ListingsRepository } from "../listings/mock-repository";
+import type { ListingsRepository } from "../listings/types";
 
 import type { CreateRequestInput, RentalRequest, RequestFilter, RequestStatus } from "./types";
 

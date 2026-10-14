@@ -1,15 +1,8 @@
-import type { ListingsRepository } from "../listings/mock-repository";
+import type { ListingsRepository } from "../listings/types";
 import type { MockRequestsStore } from "../requests/mock-store";
 
 import { SEED_REVIEWS } from "./seed";
-import type { CreateReviewInput, Review } from "./types";
-
-export interface ReviewsRepository {
-  listForUser(userId: string): Promise<Review[]>;
-  listForRequest(requestId: string): Promise<Review[]>;
-  hasReviewed(requestId: string, reviewerId: string): Promise<boolean>;
-  create(input: CreateReviewInput): Promise<Review>;
-}
+import type { CreateReviewInput, Review, ReviewsRepository } from "./types";
 
 /**
  * Two-way reviews, gated on a completed (returned) borrow — the same rule the

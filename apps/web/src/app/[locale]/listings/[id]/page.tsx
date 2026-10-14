@@ -13,6 +13,8 @@ import { Link } from "@/i18n/navigation";
 import { formatCurrency } from "@/lib/format";
 import { getStores } from "@/lib/stores";
 
+export const instant = false;
+
 export default async function ListingPage({
   params,
 }: {

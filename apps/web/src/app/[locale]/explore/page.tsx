@@ -12,6 +12,8 @@ function first(value: string | string[] | undefined): string | undefined {
   return raw && raw.length > 0 ? raw : undefined;
 }
 
+export const instant = false;
+
 export default async function ExplorePage({
   params,
   searchParams,

@@ -2,20 +2,11 @@ import { SEED_THREADS } from "./seed";
 import type {
   CreateThreadInput,
   Message,
+  MessagesRepository,
   SendMessageInput,
   Thread,
   ThreadPreview,
 } from "./types";
-
-export interface MessagesRepository {
-  listThreads(userId: string): Promise<ThreadPreview[]>;
-  getThread(threadId: string): Promise<Thread | null>;
-  listMessages(threadId: string): Promise<Message[]>;
-  sendMessage(input: SendMessageInput): Promise<Message>;
-  markRead(threadId: string, userId: string): Promise<void>;
-  getOrCreateThread(input: CreateThreadInput): Promise<Thread>;
-  unreadCount(userId: string): Promise<number>;
-}
 
 function otherParticipant(thread: Thread, userId: string): string {
   return thread.participantA === userId ? thread.participantB : thread.participantA;

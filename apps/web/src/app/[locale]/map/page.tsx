@@ -3,6 +3,8 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { MockMap } from "@/components/mock-map";
 import { getStores } from "@/lib/stores";
 
+export const instant = false;
+
 export default async function MapPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);

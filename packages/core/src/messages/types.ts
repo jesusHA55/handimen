@@ -44,3 +44,14 @@ export interface SendMessageInput {
   senderId: string;
   body: string;
 }
+
+/** The messaging contract — implemented by the Supabase layer and the demo layer. */
+export interface MessagesRepository {
+  listThreads(userId: string): Promise<ThreadPreview[]>;
+  getThread(threadId: string): Promise<Thread | null>;
+  listMessages(threadId: string): Promise<Message[]>;
+  sendMessage(input: SendMessageInput): Promise<Message>;
+  markRead(threadId: string, userId: string): Promise<void>;
+  getOrCreateThread(input: CreateThreadInput): Promise<Thread>;
+  unreadCount(userId: string): Promise<number>;
+}

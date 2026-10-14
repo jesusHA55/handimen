@@ -199,7 +199,19 @@ week", not a headcount plan.
 
 ---
 
-## 9. Non-goals
+## 9. Known issues
+
+- **Dev-only warning:** the first request to `/[locale]/listings/[id]` after a fresh
+  compile logs `Next.js encountered the unstable value Date.now() while prerendering`.
+  It fires once per compile, not per request, and the production build is clean, so it
+  looks like a Turbopack dev artifact rather than a runtime defect. Worth chasing if it
+  survives the move to an optimised production server.
+- **Demo layer import safety:** the in-memory layer and its seeds build timestamps at
+  module scope, so they must never be imported from the `@handimen/core` root — use
+  `@handimen/core/testing`. Importing them from the root reintroduces the `Date.now()`
+  prerender error across the app.
+
+## 10. Non-goals
 
 Deliberately **not** doing, and why:
 

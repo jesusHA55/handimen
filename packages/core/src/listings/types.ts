@@ -63,3 +63,18 @@ export interface CreateListingInput {
   photos?: string[];
   groupId?: string | null;
 }
+
+/** The listings contract — implemented by the Supabase layer and the demo layer. */
+export interface ListingsRepository {
+  list(filter?: ListingFilter): Promise<Listing[]>;
+  get(id: string): Promise<Listing | null>;
+  getOwner(id: string): Promise<ListingOwner | null>;
+  getOwners(ids: string[]): Promise<ListingOwner[]>;
+  create(input: CreateListingInput): Promise<Listing>;
+  setStatus(id: string, status: ListingStatus): Promise<Listing | null>;
+  verifyPhone(ownerId: string): Promise<ListingOwner | null>;
+  verifyIdentity(ownerId: string): Promise<ListingOwner | null>;
+  /** Rating and handoff counters are derived; these exist for the demo layer. */
+  addReview(ownerId: string, rating: number): Promise<ListingOwner | null>;
+  incrementHandoffs(ownerId: string): Promise<ListingOwner | null>;
+}

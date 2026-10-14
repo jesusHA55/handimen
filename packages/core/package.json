@@ -5,9 +5,10 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./testing": "./src/testing.ts",
     "./payments": "./src/payments/index.ts",
     "./trust": "./src/trust/index.ts",
-    "./listings": "./src/listings/index.ts"
+    "./listings": "./src/listings/categories.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

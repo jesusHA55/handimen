@@ -9,6 +9,8 @@ import { Link } from "@/i18n/navigation";
 import { getStores } from "@/lib/stores";
 import { cn } from "@/lib/utils";
 
+export const instant = false;
+
 export default async function ThreadPage({
   params,
 }: {

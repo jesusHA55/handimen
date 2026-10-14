@@ -11,6 +11,8 @@ import { Link } from "@/i18n/navigation";
 import { seedDemoContentAction, verifyIdentityAction, verifyPhoneAction } from "@/lib/actions";
 import { getStores } from "@/lib/stores";
 
+export const instant = false;
+
 export default async function ProfilePage({
   params,
 }: {

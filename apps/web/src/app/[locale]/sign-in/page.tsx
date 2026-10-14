@@ -7,6 +7,8 @@ import { SignInForm } from "@/components/sign-in-form";
 import { Card, CardContent } from "@/components/ui/card";
 import { getCurrentUser } from "@/lib/auth";
 
+export const instant = false;
+
 export default async function SignInPage({
   params,
 }: {
