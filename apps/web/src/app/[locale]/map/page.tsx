@@ -1,14 +1,15 @@
-import { getListingsRepository } from "@handimen/core";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { MockMap } from "@/components/mock-map";
+import { getStores } from "@/lib/stores";
 
 export default async function MapPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
 
   const t = await getTranslations("map");
-  const listings = await getListingsRepository().list();
+  const { listings } = await getStores();
+  const results = await listings.list();
 
   return (
     <div className="flex flex-col gap-6">
@@ -17,7 +18,7 @@ export default async function MapPage({ params }: { params: Promise<{ locale: st
         <p className="text-muted-foreground">{t("subtitle")}</p>
       </div>
 
-      <MockMap listings={listings} />
+      <MockMap listings={results} />
     </div>
   );
 }

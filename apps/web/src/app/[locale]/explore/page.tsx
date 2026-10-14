@@ -1,8 +1,9 @@
-import { getListingsRepository, type ListingFilter, type ListingTerms, type ListingType } from "@handimen/core";
+import type { ListingFilter, ListingTerms, ListingType } from "@handimen/core";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { ListingCard } from "@/components/listing-card";
 import { ListingFilters } from "@/components/listing-filters";
+import { getStores } from "@/lib/stores";
 
 type SearchParams = Record<string, string | string[] | undefined>;
 
@@ -36,7 +37,7 @@ export default async function ExplorePage({
     type,
   };
 
-  const listings = getListingsRepository();
+  const { listings } = await getStores();
   const results = await listings.list(filter);
   const owners = await listings.getOwners(results.map((listing) => listing.ownerId));
   const ownerMap = new Map(owners.map((owner) => [owner.id, owner]));

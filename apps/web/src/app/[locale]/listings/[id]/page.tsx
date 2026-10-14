@@ -1,9 +1,3 @@
-import {
-  CURRENT_USER_ID,
-  getListingsRepository,
-  getRequestsStoreReady,
-  getReviewsStore,
-} from "@handimen/core";
 import { ArrowLeft, MapPin, Star } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -16,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "@/i18n/navigation";
 import { formatCurrency, formatRelativeTime } from "@/lib/format";
+import { getStores } from "@/lib/stores";
 
 export default async function ListingPage({
   params,
@@ -25,7 +20,7 @@ export default async function ListingPage({
   const { locale, id } = await params;
   setRequestLocale(locale);
 
-  const listings = getListingsRepository();
+  const { listings, reviews, userId } = await getStores();
   const listing = await listings.get(id);
   if (!listing) notFound();
 
@@ -35,10 +30,9 @@ export default async function ListingPage({
   const tReview = await getTranslations("review");
   const tMessages = await getTranslations("messages");
   const tCategories = await getTranslations("categories");
-  const isYours = listing.ownerId === CURRENT_USER_ID;
+  const isYours = listing.ownerId === userId;
   const isRent = listing.terms === "rent";
 
-  const reviews = getReviewsStore(listings, await getRequestsStoreReady());
   const ownerReviews = owner ? await reviews.listForUser(owner.id) : [];
   const reviewers = await listings.getOwners(ownerReviews.map((review) => review.reviewerId));
   const reviewerMap = new Map(reviewers.map((reviewer) => [reviewer.id, reviewer]));

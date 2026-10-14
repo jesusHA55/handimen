@@ -1,14 +1,9 @@
-import {
-  CURRENT_USER_ID,
-  getListingsRepository,
-  getRequestsStoreReady,
-  getReviewsStore,
-} from "@handimen/core";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { RequestRow } from "@/components/request-row";
 import { ReviewForm } from "@/components/review-form";
 import type { Locale } from "@/lib/format";
+import { getStores } from "@/lib/stores";
 
 export default async function RequestsPage({
   params,
@@ -19,14 +14,12 @@ export default async function RequestsPage({
   setRequestLocale(locale);
 
   const t = await getTranslations("request");
-  const store = await getRequestsStoreReady();
+  const { requests: store, reviews, userId } = await getStores();
 
   const [outgoing, incoming] = await Promise.all([
-    store.list({ requesterId: CURRENT_USER_ID }),
-    store.list({ ownerId: CURRENT_USER_ID }),
+    store.list({ requesterId: userId }),
+    store.list({ ownerId: userId }),
   ]);
-
-  const reviews = getReviewsStore(getListingsRepository(), store);
 
   // A completed borrow can still be reviewed by the requester until they do.
   const reviewable = new Set(
@@ -35,7 +28,7 @@ export default async function RequestsPage({
         outgoing
           .filter((request) => request.status === "returned")
           .map(async (request) =>
-            (await reviews.hasReviewed(request.id, CURRENT_USER_ID)) ? null : request.id,
+            (await reviews.hasReviewed(request.id, userId)) ? null : request.id,
           ),
       )
     ).filter((id): id is string => id !== null),

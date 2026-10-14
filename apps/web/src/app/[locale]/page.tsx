@@ -1,8 +1,3 @@
-import {
-  CURRENT_USER_ID,
-  getListingsRepository,
-  getSocialRepository,
-} from "@handimen/core";
 import { ArrowRight, MapPin, Sparkles } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
@@ -14,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "@/i18n/navigation";
 import { formatRelativeTime } from "@/lib/format";
+import { getStores } from "@/lib/stores";
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -21,8 +17,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
   const t = await getTranslations("home");
 
-  const listings = getListingsRepository();
-  const social = getSocialRepository();
+  const { listings, social, userId } = await getStores();
 
   const allListings = await listings.list();
   const featured = allListings.slice(0, 6);
@@ -34,7 +29,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     posts.map(async (post) => ({
       post,
       author: ownerMap.get(post.authorId) ?? null,
-      liked: await social.hasLiked(post.id, CURRENT_USER_ID),
+      liked: await social.hasLiked(post.id, userId),
       count: await social.reactionCount(post.id),
     })),
   );

@@ -1,4 +1,3 @@
-import { CURRENT_USER_ID, getListingsRepository, getMessagesStore } from "@handimen/core";
 import type { Metadata } from "next";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -6,13 +5,14 @@ import { notFound } from "next/navigation";
 
 import { SiteHeader } from "@/components/site-header";
 import { routing } from "@/i18n/routing";
+import { getStores } from "@/lib/stores";
 
 import "../globals.css";
 
 type Params = { locale: string };
 
-// The Phase 1 demo reads mutable in-memory stores, so pages render on demand
-// rather than being frozen at build time. Swap for caching once Supabase is live.
+// The demo data layer is in-memory and auth-aware, so pages render on demand
+// rather than being frozen at build time. Revisit once Supabase is the source.
 export const dynamic = "force-dynamic";
 
 export function generateStaticParams() {
@@ -44,8 +44,9 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
 
   const t = await getTranslations("footer");
-  const owner = await getListingsRepository().getOwner(CURRENT_USER_ID);
-  const unreadCount = await getMessagesStore().unreadCount(CURRENT_USER_ID);
+  const { owner, signedIn, email, messages, userId } = await getStores();
+  const unreadCount = await messages.unreadCount(userId);
+
   const user = {
     displayName: owner?.displayName ?? "Tú",
     avatarEmoji: owner?.avatarEmoji ?? "🙋",
@@ -56,7 +57,7 @@ export default async function LocaleLayout({
     <html lang={locale} suppressHydrationWarning>
       <body className="min-h-dvh antialiased">
         <NextIntlClientProvider>
-          <SiteHeader user={user} unreadCount={unreadCount} />
+          <SiteHeader user={user} unreadCount={unreadCount} signedIn={signedIn} email={email} />
           <div className="mx-auto max-w-6xl px-4 py-8">{children}</div>
           <footer className="mx-auto max-w-6xl border-t border-border px-4 py-6 text-sm text-muted-foreground">
             {t("note")}

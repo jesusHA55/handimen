@@ -209,6 +209,17 @@
     "submit": "Post review",
     "empty": "No reviews yet."
   },
+  "signIn": {
+    "title": "Sign in to Handimen",
+    "subtitle": "We'll email you a magic link. No password needed.",
+    "email": "Email",
+    "submit": "Send magic link",
+    "sending": "Sending…",
+    "sentTitle": "Check your inbox",
+    "sent": "We sent a sign-in link to {email}. Open it on this device.",
+    "error": "We couldn't send the link. Please try again.",
+    "signOut": "Sign out"
+  },
   "trustBadge": {
     "tier0": "Tier 0",
     "tier1": "Tier 1",

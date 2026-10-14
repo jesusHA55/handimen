@@ -1,4 +1,3 @@
-import { CURRENT_USER_ID, getListingsRepository, getMessagesStore } from "@handimen/core";
 import { ArrowLeft } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -7,6 +6,7 @@ import { MessageComposer } from "@/components/message-composer";
 import { TrustBadge } from "@/components/trust-badge";
 import { Link } from "@/i18n/navigation";
 import { formatRelativeTime } from "@/lib/format";
+import { getStores } from "@/lib/stores";
 import { cn } from "@/lib/utils";
 
 export default async function ThreadPage({
@@ -17,25 +17,23 @@ export default async function ThreadPage({
   const { locale, threadId } = await params;
   setRequestLocale(locale);
 
-  const store = getMessagesStore();
-  const thread = await store.getThread(threadId);
+  const { messages: messagesStore, listings, userId } = await getStores();
+  const thread = await messagesStore.getThread(threadId);
   if (!thread) notFound();
 
-  const isParticipant =
-    thread.participantA === CURRENT_USER_ID || thread.participantB === CURRENT_USER_ID;
+  const isParticipant = thread.participantA === userId || thread.participantB === userId;
   if (!isParticipant) notFound();
 
-  // Reading the thread clears its unread messages (mock read receipts).
-  await store.markRead(threadId, CURRENT_USER_ID);
+  // Reading the thread clears its unread messages (demo read receipts).
+  await messagesStore.markRead(threadId, userId);
 
-  const [messages, t] = await Promise.all([
-    store.listMessages(threadId),
+  const [threadMessages, t] = await Promise.all([
+    messagesStore.listMessages(threadId),
     getTranslations("messages"),
   ]);
 
-  const otherId =
-    thread.participantA === CURRENT_USER_ID ? thread.participantB : thread.participantA;
-  const other = await getListingsRepository().getOwner(otherId);
+  const otherId = thread.participantA === userId ? thread.participantB : thread.participantA;
+  const other = await listings.getOwner(otherId);
 
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-4">
@@ -68,8 +66,8 @@ export default async function ThreadPage({
       </div>
 
       <ul className="flex flex-col gap-3 py-2">
-        {messages.map((message) => {
-          const mine = message.senderId === CURRENT_USER_ID;
+        {threadMessages.map((message) => {
+          const mine = message.senderId === userId;
           return (
             <li key={message.id} className={cn("flex", mine ? "justify-end" : "justify-start")}>
               <div

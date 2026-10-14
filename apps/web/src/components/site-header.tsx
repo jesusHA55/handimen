@@ -1,12 +1,13 @@
 "use client";
 
-import { Compass, Inbox, Map, MessageSquare, Plus, User } from "lucide-react";
+import { Compass, Inbox, LogIn, LogOut, Map, MessageSquare, Plus, User } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { Button } from "@/components/ui/button";
 import { Link, usePathname } from "@/i18n/navigation";
+import { signOutAction } from "@/lib/actions";
 import { cn } from "@/lib/utils";
 
 export interface HeaderUser {
@@ -22,8 +23,19 @@ const NAV = [
   { href: "/messages", icon: MessageSquare, key: "messages" },
 ] as const;
 
-export function SiteHeader({ user, unreadCount = 0 }: { user: HeaderUser; unreadCount?: number }) {
+export function SiteHeader({
+  user,
+  unreadCount = 0,
+  signedIn = false,
+  email = null,
+}: {
+  user: HeaderUser;
+  unreadCount?: number;
+  signedIn?: boolean;
+  email?: string | null;
+}) {
   const t = useTranslations("nav");
+  const tSignIn = useTranslations("signIn");
   const pathname = usePathname();
 
   return (
@@ -75,15 +87,32 @@ export function SiteHeader({ user, unreadCount = 0 }: { user: HeaderUser; unread
               <span className="hidden sm:inline">{t("newListing")}</span>
             </Link>
           </Button>
-          <Link
-            href="/profile"
-            className="inline-flex items-center gap-2 rounded-full border border-border px-2 py-1 text-sm hover:bg-muted"
-            title={t("profile")}
-          >
-            <span aria-hidden>{user.avatarEmoji}</span>
-            <span className="hidden lg:inline">{user.displayName}</span>
-            <User className="size-3.5 text-muted-foreground lg:hidden" aria-hidden />
-          </Link>
+
+          {signedIn ? (
+            <div className="flex items-center gap-1.5">
+              <Link
+                href="/profile"
+                className="inline-flex items-center gap-2 rounded-full border border-border px-2 py-1 text-sm hover:bg-muted"
+                title={email ?? user.displayName}
+              >
+                <span aria-hidden>{user.avatarEmoji}</span>
+                <span className="hidden lg:inline">{user.displayName}</span>
+                <User className="size-3.5 text-muted-foreground lg:hidden" aria-hidden />
+              </Link>
+              <form action={signOutAction}>
+                <Button type="submit" size="icon" variant="ghost" title={tSignIn("signOut")}>
+                  <LogOut className="size-4" aria-hidden />
+                </Button>
+              </form>
+            </div>
+          ) : (
+            <Button size="sm" variant="outline" asChild>
+              <Link href="/sign-in">
+                <LogIn className="size-4" aria-hidden />
+                <span className="hidden sm:inline">{t("signIn")}</span>
+              </Link>
+            </Button>
+          )}
         </div>
       </div>
     </header>

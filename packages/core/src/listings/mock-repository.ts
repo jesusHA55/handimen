@@ -153,12 +153,4 @@ export class MockListingsRepository implements ListingsRepository {
   }
 }
 
-// Survive module re-evaluation (Turbopack/HMR) by hanging state off globalThis.
-const globalStore = globalThis as unknown as { __handimenListings?: MockListingsRepository };
-
-export function getListingsRepository(): ListingsRepository {
-  globalStore.__handimenListings ??= new MockListingsRepository();
-  return globalStore.__handimenListings;
-}
-
 export { CURRENT_USER_ID, POBLENOU_CITY_ID };

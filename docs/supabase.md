@@ -16,7 +16,10 @@ There are two paths. They're not exclusive — most teams do **A then B**.
 - [x] Seeded: Barcelona city
 - [x] Real generated DB types in `packages/db/src/database.types.ts`
 - [x] `GET /api/health` proves connectivity (reads `cities` through RLS)
-- [ ] Supabase Auth (email OTP + Google) — next
+- [x] Supabase Auth magic link: `/sign-in`, `/auth/callback`, sign-out
+- [x] Auth redirect allow-list set to `http://localhost:3000/auth/callback`
+- [ ] **Custom SMTP** — the built-in emailer only delivers to org team members
+      (2/hour). Magic links only reach your Supabase account email until then.
 - [ ] Swap the mock repositories for Supabase-backed implementations
 
 > Migrations were applied via the Management API (no local Postgres/CLI needed).

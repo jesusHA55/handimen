@@ -1,4 +1,3 @@
-import { CURRENT_USER_ID, getListingsRepository, getMessagesStore } from "@handimen/core";
 import { MessageSquare } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
@@ -6,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "@/i18n/navigation";
 import { formatRelativeTime } from "@/lib/format";
+import { getStores } from "@/lib/stores";
 
 export default async function MessagesPage({
   params,
@@ -16,9 +16,10 @@ export default async function MessagesPage({
   setRequestLocale(locale);
 
   const t = await getTranslations("messages");
-  const previews = await getMessagesStore().listThreads(CURRENT_USER_ID);
+  const { messages, listings, userId } = await getStores();
+  const previews = await messages.listThreads(userId);
 
-  const owners = await getListingsRepository().getOwners(
+  const owners = await listings.getOwners(
     previews.map((preview) => preview.otherParticipantId),
   );
   const ownerMap = new Map(owners.map((owner) => [owner.id, owner]));
@@ -71,7 +72,7 @@ export default async function MessagesPage({
 
                         {lastMessage ? (
                           <p className="mt-1 truncate text-sm text-muted-foreground">
-                            {lastMessage.senderId === CURRENT_USER_ID ? `${t("you")}: ` : ""}
+                            {lastMessage.senderId === userId ? `${t("you")}: ` : ""}
                             {lastMessage.body}
                           </p>
                         ) : null}

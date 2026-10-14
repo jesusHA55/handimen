@@ -1,9 +1,3 @@
-import {
-  CURRENT_USER_ID,
-  getListingsRepository,
-  getRequestsStoreReady,
-  getReviewsStore,
-} from "@handimen/core";
 import { Check, ShieldCheck, Star, X } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
@@ -14,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { verifyPhoneAction } from "@/lib/actions";
+import { getStores } from "@/lib/stores";
 
 export default async function ProfilePage({
   params,
@@ -25,12 +20,9 @@ export default async function ProfilePage({
 
   const t = await getTranslations("profile");
   const tReview = await getTranslations("review");
-  const listings = getListingsRepository();
-  const owner = await listings.getOwner(CURRENT_USER_ID);
-  const mine = await listings.list({ ownerId: CURRENT_USER_ID });
-
-  const reviews = getReviewsStore(listings, await getRequestsStoreReady());
-  const received = await reviews.listForUser(CURRENT_USER_ID);
+  const { listings, reviews, userId, owner, email, signedIn } = await getStores();
+  const mine = await listings.list({ ownerId: userId });
+  const received = await reviews.listForUser(userId);
   const reviewers = await listings.getOwners(received.map((review) => review.reviewerId));
   const reviewerMap = new Map(reviewers.map((reviewer) => [reviewer.id, reviewer]));
 
@@ -51,6 +43,11 @@ export default async function ProfilePage({
           <div className="mt-1 flex items-center gap-2">
             <TrustBadge tier={owner?.trustTier ?? 0} />
             <span className="text-sm text-muted-foreground">{owner?.neighbourhood}</span>
+            {signedIn && email ? (
+              <span className="max-w-[16rem] truncate text-sm text-muted-foreground" title={email}>
+                · {email}
+              </span>
+            ) : null}
             {owner && owner.reviewCount > 0 ? (
               <span className="flex items-center gap-0.5 text-sm text-muted-foreground">
                 <Star className="size-3.5 fill-accent text-accent" aria-hidden />

@@ -1,12 +1,6 @@
 "use server";
 
 import {
-  CURRENT_USER_ID,
-  getListingsRepository,
-  getMessagesStore,
-  getRequestsStoreReady,
-  getReviewsStore,
-  getSocialRepository,
   listingGate,
   type ListingOwner,
   type ListingTerms,
@@ -17,6 +11,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { localePath } from "@/lib/format";
+import { getStores } from "@/lib/stores";
+import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 export interface FormState {
   ok: boolean;
@@ -51,13 +47,16 @@ export async function createListingAction(
   formData: FormData,
 ): Promise<FormState> {
   const locale = str(formData, "locale") || "es";
-  const listings = getListingsRepository();
-  const owner = await listings.getOwner(CURRENT_USER_ID);
+  const { listings, userId, owner } = await getStores();
 
   const terms = (str(formData, "terms") || "free") as ListingTerms;
   const gate = listingGate(terms, toSignals(owner));
   if (!gate.allowed) {
-    return { ok: false, errorCode: gate.reason ?? "not_allowed", requiresPhone: gate.requiresPhoneVerification };
+    return {
+      ok: false,
+      errorCode: gate.reason ?? "not_allowed",
+      requiresPhone: gate.requiresPhoneVerification,
+    };
   }
 
   const type = (str(formData, "type") || "tool") as ListingType;
@@ -70,11 +69,9 @@ export async function createListingAction(
 
   const priceEuros = intOrNull(formData, "priceEuros");
   const depositEuros = intOrNull(formData, "depositEuros");
-  const lat = Number.parseFloat(str(formData, "lat")) || 41.4005;
-  const lng = Number.parseFloat(str(formData, "lng")) || 2.1975;
 
   const listing = await listings.create({
-    ownerId: CURRENT_USER_ID,
+    ownerId: userId,
     type,
     terms,
     category,
@@ -83,8 +80,8 @@ export async function createListingAction(
     priceCents: terms === "rent" && priceEuros !== null ? priceEuros * 100 : null,
     priceUnit: (str(formData, "priceUnit") || "day") as "hour" | "day" | "week",
     depositCents: terms === "rent" && depositEuros !== null ? depositEuros * 100 : null,
-    lat,
-    lng,
+    lat: Number.parseFloat(str(formData, "lat")) || 41.4005,
+    lng: Number.parseFloat(str(formData, "lng")) || 2.1975,
   });
 
   revalidatePath("/", "layout");
@@ -93,24 +90,22 @@ export async function createListingAction(
 
 export async function createRequestAction(formData: FormData) {
   const locale = str(formData, "locale") || "es";
-  const listingId = str(formData, "listingId");
-  const startDate = str(formData, "startDate");
-  const endDate = str(formData, "endDate");
+  const { requests, listings, messages, userId } = await getStores();
 
-  const store = await getRequestsStoreReady();
-  const request = await store.create({
+  const listingId = str(formData, "listingId");
+  const request = await requests.create({
     listingId,
-    requesterId: CURRENT_USER_ID,
-    startDate: new Date(startDate).toISOString(),
-    endDate: new Date(endDate).toISOString(),
+    requesterId: userId,
+    startDate: new Date(str(formData, "startDate")).toISOString(),
+    endDate: new Date(str(formData, "endDate")).toISOString(),
     message: str(formData, "message") || undefined,
   });
 
   // Open a conversation with the owner so the two can arrange the handoff.
-  const listing = await getListingsRepository().get(listingId);
+  const listing = await listings.get(listingId);
   if (listing) {
-    await getMessagesStore().getOrCreateThread({
-      participantA: CURRENT_USER_ID,
+    await messages.getOrCreateThread({
+      participantA: userId,
       participantB: listing.ownerId,
       context: { listingId: listing.id, listingTitle: listing.title, requestId: request.id },
     });
@@ -122,38 +117,40 @@ export async function createRequestAction(formData: FormData) {
 
 export async function advanceRequestAction(formData: FormData) {
   const locale = str(formData, "locale") || "es";
+  const { requests } = await getStores();
   const id = str(formData, "requestId");
   const action = str(formData, "requestAction");
-  const store = await getRequestsStoreReady();
 
-  if (action === "approve") await store.approve(id);
-  else if (action === "decline") await store.decline(id);
-  else if (action === "activate") await store.activate(id);
-  else if (action === "return") await store.markReturned(id);
-  else if (action === "cancel") await store.cancel(id);
+  if (action === "approve") await requests.approve(id);
+  else if (action === "decline") await requests.decline(id);
+  else if (action === "activate") await requests.activate(id);
+  else if (action === "return") await requests.markReturned(id);
+  else if (action === "cancel") await requests.cancel(id);
 
   revalidatePath("/", "layout");
   redirect(localePath(locale, "/requests"));
 }
 
 export async function toggleLikeAction(formData: FormData) {
-  const postId = str(formData, "postId");
-  await getSocialRepository().toggleLike(postId, CURRENT_USER_ID);
+  const { social, userId } = await getStores();
+  await social.toggleLike(str(formData, "postId"), userId);
   revalidatePath("/", "layout");
 }
 
 export async function verifyPhoneAction() {
-  await getListingsRepository().verifyPhone(CURRENT_USER_ID);
+  const { listings, userId } = await getStores();
+  await listings.verifyPhone(userId);
   revalidatePath("/", "layout");
 }
 
 export async function startThreadAction(formData: FormData) {
   const locale = str(formData, "locale") || "es";
+  const { messages, userId } = await getStores();
   const ownerId = str(formData, "ownerId");
   if (!ownerId) return;
 
-  const thread = await getMessagesStore().getOrCreateThread({
-    participantA: CURRENT_USER_ID,
+  const thread = await messages.getOrCreateThread({
+    participantA: userId,
     participantB: ownerId,
     context: {
       listingId: str(formData, "listingId") || null,
@@ -167,28 +164,37 @@ export async function startThreadAction(formData: FormData) {
 
 export async function sendMessageAction(formData: FormData) {
   const locale = str(formData, "locale") || "es";
+  const { messages, userId } = await getStores();
   const threadId = str(formData, "threadId");
   const body = str(formData, "body");
+
   if (body) {
-    await getMessagesStore().sendMessage({ threadId, senderId: CURRENT_USER_ID, body });
+    await messages.sendMessage({ threadId, senderId: userId, body });
   }
+
   revalidatePath("/", "layout");
   redirect(localePath(locale, `/messages/${threadId}`));
 }
 
 export async function createReviewAction(formData: FormData) {
   const locale = str(formData, "locale") || "es";
-  const requestId = str(formData, "requestId");
+  const { reviews, userId } = await getStores();
   const rating = Number.parseInt(str(formData, "rating"), 10);
 
-  const reviews = getReviewsStore(getListingsRepository(), await getRequestsStoreReady());
   await reviews.create({
-    requestId,
-    reviewerId: CURRENT_USER_ID,
+    requestId: str(formData, "requestId"),
+    reviewerId: userId,
     rating: Number.isFinite(rating) ? rating : 5,
     comment: str(formData, "comment") || null,
   });
 
   revalidatePath("/", "layout");
   redirect(localePath(locale, "/requests"));
+}
+
+export async function signOutAction() {
+  const supabase = await getSupabaseServerClient();
+  await supabase.auth.signOut();
+  revalidatePath("/", "layout");
+  redirect("/");
 }
