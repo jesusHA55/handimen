@@ -5,6 +5,7 @@ import {
   type ListingOwner,
   type ListingTerms,
   type ListingType,
+  type PostVisibility,
   type TrustSignals,
 } from "@handimen/core";
 import { revalidatePath } from "next/cache";
@@ -19,6 +20,8 @@ export interface FormState {
   errorCode?: string;
   requiresPhone?: boolean;
   requiresId?: boolean;
+  /** Bumped on a successful post so the composer can remount and clear. */
+  postedAt?: number;
 }
 
 function toSignals(owner: ListingOwner | null): TrustSignals {
@@ -153,6 +156,69 @@ export async function toggleLikeAction(formData: FormData) {
 
   await social.toggleLike(str(formData, "postId"), userId);
   revalidatePath("/", "layout");
+}
+
+// --- Bulletin board -------------------------------------------------------
+
+export async function createPostAction(
+  _prev: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  const locale = str(formData, "locale") || "es";
+  const { social } = await getStores();
+  const userId = await requireUserId(locale);
+
+  const body = str(formData, "body");
+  if (!body) return { ok: false, errorCode: "post_empty" };
+
+  const visibility = (str(formData, "visibility") || "city") as PostVisibility;
+
+  await social.createPost({
+    authorId: userId,
+    body,
+    visibility,
+    listingId: str(formData, "listingId") || null,
+  });
+
+  revalidatePath("/", "layout");
+  return { ok: true, postedAt: Date.now() };
+}
+
+export async function deletePostAction(formData: FormData) {
+  const locale = str(formData, "locale") || "es";
+  const { social } = await getStores();
+  const userId = await requireUserId(locale);
+
+  await social.deletePost(str(formData, "postId"), userId);
+  revalidatePath("/", "layout");
+  redirect(localePath(locale, "/"));
+}
+
+export async function addCommentAction(formData: FormData) {
+  const locale = str(formData, "locale") || "es";
+  const { social } = await getStores();
+  const userId = await requireUserId(locale);
+
+  const postId = str(formData, "postId");
+  const body = str(formData, "body");
+  if (body) {
+    await social.addComment({ postId, authorId: userId, body });
+  }
+
+  revalidatePath("/", "layout");
+  redirect(localePath(locale, `/posts/${postId}`));
+}
+
+export async function deleteCommentAction(formData: FormData) {
+  const locale = str(formData, "locale") || "es";
+  const { social } = await getStores();
+  const userId = await requireUserId(locale);
+
+  const postId = str(formData, "postId");
+  await social.deleteComment(str(formData, "commentId"), userId);
+
+  revalidatePath("/", "layout");
+  redirect(localePath(locale, `/posts/${postId}`));
 }
 
 export async function verifyPhoneAction(formData: FormData) {

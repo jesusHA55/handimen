@@ -228,6 +228,31 @@
     "error": "No hemos podido enviar el enlace. Inténtalo de nuevo.",
     "signOut": "Cerrar sesión"
   },
+  "feed": {
+    "composerTitle": "Comparte con el barrio",
+    "placeholder": "Pide una mano, presta algo o simplemente saluda…",
+    "publish": "Publicar",
+    "publishing": "Publicando…",
+    "visibility": "Quién puede verlo",
+    "visibilityCity": "Todo el barrio",
+    "visibilityFollowers": "Solo seguidores",
+    "attach": "Adjunta uno de tus anuncios",
+    "attachNone": "Sin anuncio",
+    "commentedOn": "Sobre",
+    "attachedListing": "un anuncio",
+    "empty": "Todavía no hay nada en el tablón. Sé el primero.",
+    "comments": "Comentarios",
+    "commentPlaceholder": "Escribe un comentario…",
+    "comment": "Comentar",
+    "noComments": "Todavía no hay comentarios.",
+    "delete": "Eliminar",
+    "confirmDelete": "¿Eliminar esta publicación? No se puede deshacer.",
+    "backToFeed": "Volver al tablón",
+    "signInToPost": "Entra para publicar y comentar.",
+    "error": {
+      "post_empty": "Escribe algo primero."
+    }
+  },
   "trustBadge": {
     "tier0": "Nivel 0",
     "tier1": "Nivel 1",

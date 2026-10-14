@@ -228,6 +228,31 @@
     "error": "We couldn't send the link. Please try again.",
     "signOut": "Sign out"
   },
+  "feed": {
+    "composerTitle": "Share with the neighbourhood",
+    "placeholder": "Ask for a hand, lend something, or just say hi…",
+    "publish": "Post",
+    "publishing": "Posting…",
+    "visibility": "Who can see it",
+    "visibilityCity": "The whole neighbourhood",
+    "visibilityFollowers": "Followers only",
+    "attach": "Attach one of your listings",
+    "attachNone": "No listing",
+    "commentedOn": "About",
+    "attachedListing": "a listing",
+    "empty": "Nothing on the board yet. Be the first.",
+    "comments": "Comments",
+    "commentPlaceholder": "Write a comment…",
+    "comment": "Comment",
+    "noComments": "No comments yet.",
+    "delete": "Delete",
+    "confirmDelete": "Delete this post? This can't be undone.",
+    "backToFeed": "Back to the board",
+    "signInToPost": "Sign in to post and comment.",
+    "error": {
+      "post_empty": "Write something first."
+    }
+  },
   "trustBadge": {
     "tier0": "Tier 0",
     "tier1": "Tier 1",

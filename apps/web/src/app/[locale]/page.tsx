@@ -1,14 +1,12 @@
 import { ArrowRight, MapPin, Sparkles } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
-import { LikeButton } from "@/components/like-button";
+import { FeedPostCard } from "@/components/feed-post-card";
 import { ListingCard } from "@/components/listing-card";
-import { TrustBadge } from "@/components/trust-badge";
+import { PostComposer } from "@/components/post-composer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "@/i18n/navigation";
-import { formatRelativeTime } from "@/lib/format";
 import { getStores } from "@/lib/stores";
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
@@ -16,24 +14,28 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   setRequestLocale(locale);
 
   const t = await getTranslations("home");
+  const tFeed = await getTranslations("feed");
 
   const { listings, social, userId } = await getStores();
 
-  const allListings = await listings.list();
-  const featured = allListings.slice(0, 6);
-  const owners = await listings.getOwners(allListings.map((listing) => listing.ownerId));
+  const [allListings, posts] = await Promise.all([listings.list(), social.listFeed()]);
+
+  const owners = await listings.getOwners([
+    ...allListings.map((listing) => listing.ownerId),
+    ...posts.map((post) => post.authorId),
+  ]);
   const ownerMap = new Map(owners.map((owner) => [owner.id, owner]));
 
-  const posts = await social.listFeed();
-  const postMeta = await Promise.all(
-    posts.map(async (post) => ({
-      post,
-      author: ownerMap.get(post.authorId) ?? null,
-      liked: userId ? await social.hasLiked(post.id, userId) : false,
-      count: await social.reactionCount(post.id),
-    })),
+  const liked = new Map(
+    await Promise.all(
+      posts.map(
+        async (post) => [post.id, userId ? await social.hasLiked(post.id, userId) : false] as const,
+      ),
+    ),
   );
 
+  const mine = userId ? allListings.filter((listing) => listing.ownerId === userId) : [];
+  const featured = allListings.slice(0, 6);
   const freeCount = allListings.filter((listing) => listing.terms === "free").length;
 
   return (
@@ -83,39 +85,27 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             <p className="text-sm text-muted-foreground">{t("feed.subtitle")}</p>
           </div>
 
-          {postMeta.length === 0 ? (
-            <p className="text-sm text-muted-foreground">{t("feed.empty")}</p>
+          {userId ? (
+            <PostComposer listings={mine.map((listing) => ({ id: listing.id, title: listing.title }))} />
+          ) : (
+            <p className="rounded-xl border border-dashed border-border p-4 text-sm text-muted-foreground">
+              {tFeed("signInToPost")}
+            </p>
+          )}
+
+          {posts.length === 0 ? (
+            <p className="text-sm text-muted-foreground">{tFeed("empty")}</p>
           ) : (
             <ul className="flex flex-col gap-3">
-              {postMeta.map(({ post, author, liked, count }) => (
+              {posts.map((post) => (
                 <li key={post.id}>
-                  <Card>
-                    <CardContent className="flex flex-col gap-3 pt-5">
-                      <div className="flex items-center gap-2">
-                        <span className="grid size-9 place-items-center rounded-full bg-muted" aria-hidden>
-                          {author?.avatarEmoji ?? "🙂"}
-                        </span>
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium">{author?.displayName ?? "?"}</span>
-                          {author ? <TrustBadge tier={author.trustTier} /> : null}
-                        </div>
-                        <span className="ml-auto text-xs text-muted-foreground">
-                          {formatRelativeTime(post.createdAt, locale)}
-                        </span>
-                      </div>
-                      <p className="text-sm">{post.body}</p>
-                      <div className="flex items-center gap-2">
-                        <LikeButton postId={post.id} count={count} liked={liked} locale={locale} />
-                        {post.listingId ? (
-                          <Button size="sm" variant="ghost" asChild>
-                            <Link href={`/listings/${post.listingId}`}>
-                              {t("featured.seeAll")}
-                            </Link>
-                          </Button>
-                        ) : null}
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <FeedPostCard
+                    post={post}
+                    author={ownerMap.get(post.authorId) ?? null}
+                    liked={liked.get(post.id) ?? false}
+                    isMine={userId === post.authorId}
+                    locale={locale}
+                  />
                 </li>
               ))}
             </ul>

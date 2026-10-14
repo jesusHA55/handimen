@@ -16,6 +16,9 @@ import {
   type CreateRequestInput,
   type CreateReviewInput,
   type CreateThreadInput,
+  type Comment,
+  type CreateCommentInput,
+  type CreatePostInput,
   type FeedPost,
   type Listing,
   type ListingFilter,
@@ -177,6 +180,16 @@ function toPost(row: PostRow, reactionCount: number, commentCount: number): Feed
     visibility: row.visibility,
     reactionCount,
     commentCount,
+    createdAt: row.created_at,
+  };
+}
+
+function toComment(row: Tables["comments"]["Row"]): Comment {
+  return {
+    id: row.id,
+    postId: row.post_id,
+    authorId: row.author_id,
+    body: row.body,
     createdAt: row.created_at,
   };
 }
@@ -706,6 +719,92 @@ export function createSocialRepository(client: Client, viewerId: string | null):
       return posts.map((post) =>
         toPost(post, counts.get(post.id) ?? 0, commentCounts.get(post.id) ?? 0),
       );
+    },
+
+    async getPost(postId: string): Promise<FeedPost | null> {
+      if (!isUuid(postId)) return null;
+      const { data, error } = await client
+        .from("posts")
+        .select("*")
+        .eq("id", postId)
+        .maybeSingle();
+      if (error) throw error;
+      if (!data) return null;
+
+      const [{ count: reactions }, { count: comments }] = await Promise.all([
+        client.from("reactions").select("post_id", { count: "exact", head: true }).eq("post_id", postId),
+        client.from("comments").select("id", { count: "exact", head: true }).eq("post_id", postId),
+      ]);
+
+      return toPost(data, reactions ?? 0, comments ?? 0);
+    },
+
+    async createPost(input: CreatePostInput): Promise<FeedPost> {
+      const body = input.body.trim();
+      if (!body) throw new Error("Post cannot be empty.");
+
+      const { data: city } = await client.from("cities").select("id").limit(1).maybeSingle();
+
+      const { data, error } = await client
+        .from("posts")
+        .insert({
+          author_id: input.authorId,
+          body,
+          visibility: input.visibility,
+          listing_id: input.listingId ?? null,
+          city_id: city?.id ?? null,
+        })
+        .select("*")
+        .single();
+      if (error) throw error;
+
+      cachedCounts = null;
+      cachedLikes = null;
+      return toPost(data, 0, 0);
+    },
+
+    async deletePost(postId: string, authorId: string): Promise<void> {
+      const { error } = await client
+        .from("posts")
+        .delete()
+        .eq("id", postId)
+        .eq("author_id", authorId);
+      if (error) throw error;
+      cachedCounts = null;
+      cachedLikes = null;
+    },
+
+    async listComments(postId: string): Promise<Comment[]> {
+      if (!isUuid(postId)) return [];
+      const { data, error } = await client
+        .from("comments")
+        .select("*")
+        .eq("post_id", postId)
+        .order("created_at", { ascending: true });
+      if (error) throw error;
+      return (data ?? []).map(toComment);
+    },
+
+    async addComment(input: CreateCommentInput): Promise<Comment> {
+      const body = input.body.trim();
+      if (!body) throw new Error("Comment cannot be empty.");
+
+      const { data, error } = await client
+        .from("comments")
+        .insert({ post_id: input.postId, author_id: input.authorId, body })
+        .select("*")
+        .single();
+      if (error) throw error;
+      return toComment(data);
+    },
+
+    async deleteComment(commentId: string, authorId: string): Promise<void> {
+      const { error } = await client
+        .from("comments")
+        .delete()
+        .eq("id", commentId)
+        .eq("author_id", authorId);
+      if (error) throw error;
     },
 
     async reactionCount(postId: string): Promise<number> {

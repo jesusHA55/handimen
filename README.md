@@ -23,7 +23,8 @@ writing needs a magic-link sign-in.
 
 | Route | What it does |
 |---|---|
-| `/` | Neighbourhood feed: posts with working likes + featured listings |
+| `/` | Bulletin board: post, like, attach a listing, delete your own posts |
+| `/posts/[id]` | A single post with its comments |
 | `/explore` | Listings with search, category / price / type filters |
 | `/map` | Stylized, keyless mock map of Poblenou with clickable pins |
 | `/listings/[id]` | Listing detail + request form |
