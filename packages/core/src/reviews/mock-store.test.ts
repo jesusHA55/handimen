@@ -80,4 +80,16 @@ describe("MockReviewsStore", () => {
     expect((await listings.getOwner("profile_you"))?.completedHandoffs).toBe(1);
     expect((await listings.getOwner("profile_marta"))?.completedHandoffs).toBe(42);
   });
+
+  it("scopes reviews to a listing, not the owner's whole history", async () => {
+    const { reviews, request } = await completedBorrow();
+    await reviews.create({ requestId: request.id, reviewerId: "profile_you", rating: 5 });
+
+    // The borrow was for the drill, so the drill carries the review…
+    expect(await reviews.listForListing("listing_taladro")).toHaveLength(1);
+    // …and Marta's other listing does not.
+    expect(await reviews.listForListing("listing_escalera")).toHaveLength(0);
+    // The owner's history still shows it.
+    expect(await reviews.listForUser("profile_marta")).toHaveLength(1);
+  });
 });

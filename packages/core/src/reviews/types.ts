@@ -21,6 +21,8 @@ export interface CreateReviewInput {
 export interface ReviewsRepository {
   listForUser(userId: string): Promise<Review[]>;
   listForRequest(requestId: string): Promise<Review[]>;
+  /** Reviews left on the borrows of one listing — what a listing page should show. */
+  listForListing(listingId: string): Promise<Review[]>;
   hasReviewed(requestId: string, reviewerId: string): Promise<boolean>;
   create(input: CreateReviewInput): Promise<Review>;
 }

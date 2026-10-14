@@ -36,8 +36,10 @@ export default async function ListingPage({
   const isYours = userId !== null && listing.ownerId === userId;
   const isRent = listing.terms === "rent";
 
-  const ownerReviews = owner ? await reviews.listForUser(owner.id) : [];
-  const reviewers = await listings.getOwners(ownerReviews.map((review) => review.reviewerId));
+  // Reviews are attached to the borrows of *this* listing, not the owner's
+  // whole history — otherwise a drill listing shows a review about a projector.
+  const listingReviews = await reviews.listForListing(listing.id);
+  const reviewers = await listings.getOwners(listingReviews.map((review) => review.reviewerId));
   const reviewerMap = new Map(reviewers.map((reviewer) => [reviewer.id, reviewer]));
 
   return (
@@ -77,9 +79,10 @@ export default async function ListingPage({
           </div>
 
           <section className="flex flex-col gap-3">
-            <h2 className="text-lg font-semibold">{tReview("recent")}</h2>
+            <h2 className="text-lg font-semibold">{tReview("forListing")}</h2>
             <ReviewList
-              items={ownerReviews.map((review) => ({
+              emptyKey="emptyForListing"
+              items={listingReviews.map((review) => ({
                 id: review.id,
                 rating: review.rating,
                 comment: review.comment,

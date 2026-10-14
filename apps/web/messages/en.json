@@ -209,6 +209,8 @@
   },
   "review": {
     "recent": "Recent reviews",
+    "forListing": "Reviews for this listing",
+    "emptyForListing": "No reviews for this listing yet.",
     "leaveTitle": "Leave a review",
     "leaveSubtitle": "How did the handoff go? Reviews keep the neighbourhood trustworthy.",
     "rating": "Rating",

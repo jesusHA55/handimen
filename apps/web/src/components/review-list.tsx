@@ -16,13 +16,19 @@ export interface ReviewItem {
   reviewerEmoji: string;
 }
 
-export function ReviewList({ items }: { items: ReviewItem[] }) {
+export function ReviewList({
+  items,
+  emptyKey = "empty",
+}: {
+  items: ReviewItem[];
+  emptyKey?: "empty" | "emptyForListing";
+}) {
   const t = useTranslations("review");
 
   if (items.length === 0) {
     return (
       <p className="rounded-xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-        {t("empty")}
+        {t(emptyKey)}
       </p>
     );
   }

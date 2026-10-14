@@ -483,6 +483,24 @@ export function createReviewsRepository(
       return (data ?? []).map(toReview);
     },
 
+    /**
+     * Reviews about a specific listing, not the owner's whole history.
+     * `reviews.listing_id` is denormalised (and trigger-maintained) precisely so
+     * this is one publicly readable query — going through `requests` would hit
+     * RLS, which only exposes a borrow to its two parties.
+     */
+    async listForListing(listingId: string): Promise<Review[]> {
+      if (!isUuid(listingId)) return [];
+
+      const { data, error } = await client
+        .from("reviews")
+        .select("*")
+        .eq("listing_id", listingId)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data ?? []).map(toReview);
+    },
+
     async hasReviewed(requestId: string, reviewerId: string): Promise<boolean> {
       const { data, error } = await client
         .from("reviews")

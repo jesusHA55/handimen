@@ -730,6 +730,7 @@ export type Database = {
           comment: string | null
           created_at: string
           id: string
+          listing_id: string | null
           rating: number
           request_id: string
           reviewee_id: string
@@ -739,6 +740,7 @@ export type Database = {
           comment?: string | null
           created_at?: string
           id?: string
+          listing_id?: string | null
           rating: number
           request_id: string
           reviewee_id: string
@@ -748,12 +750,20 @@ export type Database = {
           comment?: string | null
           created_at?: string
           id?: string
+          listing_id?: string | null
           rating?: number
           request_id?: string
           reviewee_id?: string
           reviewer_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "reviews_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "reviews_request_id_fkey"
             columns: ["request_id"]

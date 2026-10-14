@@ -29,6 +29,14 @@ export class MockReviewsStore implements ReviewsRepository {
     return [...this.reviews.values()].filter((review) => review.requestId === requestId);
   }
 
+  async listForListing(listingId: string): Promise<Review[]> {
+    const requests = await this.requests.list({ listingId });
+    const ids = new Set(requests.map((request) => request.id));
+    return [...this.reviews.values()]
+      .filter((review) => ids.has(review.requestId))
+      .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  }
+
   async hasReviewed(requestId: string, reviewerId: string): Promise<boolean> {
     return [...this.reviews.values()].some(
       (review) => review.requestId === requestId && review.reviewerId === reviewerId,
