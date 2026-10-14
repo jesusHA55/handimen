@@ -163,11 +163,12 @@
     "errors": {
       "invalid_fields": "Add a title (3+ characters) and a description.",
       "verify_email": "Verify your email before listing something.",
-      "phone_required_for_paid": "Verify your phone to list a paid rental. It keeps the neighbourhood trustworthy without costing us much.",
-      "phone_required_first_lend": "Verify your phone before your first listing.",
+      "phone_required_for_paid": "Verify your phone to list a paid rental (deposits under €50).",
+      "id_required_for_high_deposit": "Verify your identity to list a rental with a deposit of €50 or more.",
       "not_allowed": "You can't publish this listing yet."
     },
-    "verifyPhone": "Verify phone (demo)"
+    "verifyPhone": "Verify phone (demo)",
+    "verifyIdentity": "Verify identity (demo)"
   },
   "profile": {
     "title": "Your profile",
@@ -180,6 +181,8 @@
     "notVerified": "Not verified",
     "verifyPhone": "Verify phone (demo)",
     "verifyPhoneNote": "In production this sends a one-time code by SMS.",
+    "verifyIdentity": "Verify identity (demo)",
+    "verifyIdentityNote": "In production this would be an ID document check (Stripe Identity).",
     "stats": {
       "handoffs": "Completed handoffs",
       "vouches": "Vouches",

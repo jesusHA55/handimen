@@ -18,6 +18,8 @@ export interface ListingsRepository {
   setStatus(id: string, status: ListingStatus): Promise<Listing | null>;
   /** Mock Tier-1 verification toggle for the current demo user. */
   verifyPhone(ownerId: string): Promise<ListingOwner | null>;
+  /** Mock Tier-2 identity verification toggle. */
+  verifyIdentity(ownerId: string): Promise<ListingOwner | null>;
   /** Fold a new star rating into the owner's aggregate. */
   addReview(ownerId: string, rating: number): Promise<ListingOwner | null>;
   /** Bump a member's completed-handoff count. */
@@ -126,6 +128,15 @@ export class MockListingsRepository implements ListingsRepository {
     const owner = this.owners.get(ownerId);
     if (!owner) return null;
     const next: ListingOwner = { ...owner, phoneVerified: true, trustTier: owner.trustTier === 0 ? 1 : owner.trustTier };
+    this.owners.set(ownerId, next);
+    return next;
+  }
+
+  async verifyIdentity(ownerId: string): Promise<ListingOwner | null> {
+    const owner = this.owners.get(ownerId);
+    if (!owner) return null;
+    // Identity is stronger than phone, so it satisfies both.
+    const next: ListingOwner = { ...owner, phoneVerified: true, trustTier: 2 };
     this.owners.set(ownerId, next);
     return next;
   }

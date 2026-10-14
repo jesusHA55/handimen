@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "@/i18n/navigation";
-import { seedDemoContentAction, verifyPhoneAction } from "@/lib/actions";
+import { seedDemoContentAction, verifyIdentityAction, verifyPhoneAction } from "@/lib/actions";
 import { getStores } from "@/lib/stores";
 
 export default async function ProfilePage({
@@ -111,6 +111,17 @@ export default async function ProfilePage({
                 {t("verifyPhone")}
               </Button>
               <p className="text-xs text-muted-foreground">{t("verifyPhoneNote")}</p>
+            </form>
+          ) : null}
+
+          {owner.trustTier < 2 ? (
+            <form action={verifyIdentityAction} className="flex flex-col gap-2">
+              <input type="hidden" name="locale" value={locale} />
+              <input type="hidden" name="redirectTo" value="/profile" />
+              <Button type="submit" variant="outline" size="sm" className="self-start">
+                {t("verifyIdentity")}
+              </Button>
+              <p className="text-xs text-muted-foreground">{t("verifyIdentityNote")}</p>
             </form>
           ) : null}
         </CardContent>

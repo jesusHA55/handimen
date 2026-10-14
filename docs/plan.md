@@ -165,12 +165,17 @@ because no money moves. MVP trust comes from the trust stack below.
 - **In-app handoff receipt** — both parties confirm pickup and return
 
 **Tier 1 — costs money, capped in MVP:**
-- **Phone verification** (Supabase Auth + Twilio, ~€0.05–0.10/SMS). Budget math:
-  €10 ≈ 165 SMS/mo, so it is **not** universal. Required only to **list a paid
-  rental** or for a user's **first lend**. Use Twilio trial credit for early testing.
+- **Phone verification** (Supabase Auth + Twilio, ~€0.05–0.10/SMS). Required for
+  **paid listings with a deposit under €50**. Free lending never needs it, so the
+  SMS budget is only spent where money is at risk.
 
-**Tier 2 — Phase 3+:**
-- ID verification (Stripe Identity) for high-value rentals; escrowed deposits.
+**Tier 2 — identity, for high-value rentals:**
+- **ID verification** for paid listings with a **deposit of €50 or more**
+  (Stripe Identity in production; a mock toggle in the demo). Identity implies
+  phone, so it satisfies Tier 1 as well.
+
+Gate: `listingGate()` in `packages/core/src/trust/policy.ts`
+(`HIGH_VALUE_DEPOSIT_CENTS = 5000`).
 
 ---
 

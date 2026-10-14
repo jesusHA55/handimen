@@ -300,6 +300,16 @@ export function createListingsRepository(client: Client): ListingsRepository {
       return fetchOwner(client, ownerId);
     },
 
+    async verifyIdentity(ownerId: string): Promise<ListingOwner | null> {
+      // Identity is stronger than phone, so it satisfies both.
+      const { error } = await client
+        .from("profiles")
+        .update({ id_verified: true, phone_verified: true })
+        .eq("id", ownerId);
+      if (error) throw error;
+      return fetchOwner(client, ownerId);
+    },
+
     // Rating and handoff counters are owned by database triggers.
     addReview: (ownerId) => fetchOwner(client, ownerId),
     incrementHandoffs: (ownerId) => fetchOwner(client, ownerId),

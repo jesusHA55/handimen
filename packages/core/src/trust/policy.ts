@@ -1,13 +1,18 @@
 /**
- * Trust policy — encodes the tiered verification rules from the plan.
+ * Trust policy — encodes the tiered verification rules.
  *
- * Tier 0 (free): verified email + completed profile.
- * Tier 1 (costed): phone verification, required only to list a paid rental or
- *   for a user's first lend (keeps SMS spend inside the €10/month budget).
- * Tier 2 (Phase 3): ID verification for high-value rentals.
+ *   Tier 0 (email)  — required for everything; free listings need no more.
+ *   Tier 1 (phone)  — required for paid listings below the high-value deposit.
+ *   Tier 2 (identity) — required for paid listings at or above that deposit.
+ *
+ * Identity verification implies phone: holding a verified ID is strictly stronger,
+ * so it satisfies the phone requirement too.
  */
 
 export type TrustTier = 0 | 1 | 2;
+
+/** Deposits at or above this amount need identity verification. */
+export const HIGH_VALUE_DEPOSIT_CENTS = 5_000; // €50
 
 export interface TrustSignals {
   emailVerified: boolean;
@@ -19,12 +24,25 @@ export interface TrustSignals {
 
 export type ListingTerms = "free" | "rent";
 
+export interface ListingGateInput {
+  terms: ListingTerms;
+  /** Refundable deposit for paid listings, in minor units. */
+  depositCents?: number | null;
+}
+
 export interface ListingGate {
   allowed: boolean;
   requiresPhoneVerification: boolean;
-  /** Human-readable, localized on the client. */
+  requiresIdentityVerification: boolean;
+  /** Human-readable key, localized on the client. */
   reason?: string;
 }
+
+const ALLOWED: ListingGate = {
+  allowed: true,
+  requiresPhoneVerification: false,
+  requiresIdentityVerification: false,
+};
 
 export function trustTier(signals: TrustSignals): TrustTier {
   if (signals.idVerified) return 2;
@@ -36,18 +54,42 @@ export function isVetted(signals: TrustSignals): boolean {
   return trustTier(signals) >= 1 || signals.vouches >= 3;
 }
 
-export function listingGate(terms: ListingTerms, signals: TrustSignals): ListingGate {
+export function listingGate(input: ListingGateInput, signals: TrustSignals): ListingGate {
   if (!signals.emailVerified) {
-    return { allowed: false, requiresPhoneVerification: false, reason: "verify_email" };
+    return {
+      allowed: false,
+      requiresPhoneVerification: false,
+      requiresIdentityVerification: false,
+      reason: "verify_email",
+    };
   }
 
-  if (terms === "rent" && !signals.phoneVerified) {
-    return { allowed: false, requiresPhoneVerification: true, reason: "phone_required_for_paid" };
+  // Free lending only ever needs a verified email.
+  if (input.terms !== "rent") return ALLOWED;
+
+  const deposit = input.depositCents ?? 0;
+  const phoneSatisfied = signals.phoneVerified || signals.idVerified;
+
+  if (deposit >= HIGH_VALUE_DEPOSIT_CENTS) {
+    if (!signals.idVerified) {
+      return {
+        allowed: false,
+        requiresPhoneVerification: false,
+        requiresIdentityVerification: true,
+        reason: "id_required_for_high_deposit",
+      };
+    }
+    return ALLOWED;
   }
 
-  if (signals.completedHandoffs === 0 && !signals.phoneVerified) {
-    return { allowed: false, requiresPhoneVerification: true, reason: "phone_required_first_lend" };
+  if (!phoneSatisfied) {
+    return {
+      allowed: false,
+      requiresPhoneVerification: true,
+      requiresIdentityVerification: false,
+      reason: "phone_required_for_paid",
+    };
   }
 
-  return { allowed: true, requiresPhoneVerification: false };
+  return ALLOWED;
 }

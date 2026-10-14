@@ -7,7 +7,7 @@ import { useActionState, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Field, Input, Select, Textarea } from "@/components/ui/field";
 import { Link } from "@/i18n/navigation";
-import { createListingAction, verifyPhoneAction, type FormState } from "@/lib/actions";
+import { createListingAction, verifyIdentityAction, verifyPhoneAction, type FormState } from "@/lib/actions";
 
 const initialState: FormState = { ok: true };
 const PRICE_UNITS = ["hour", "day", "week"] as const;
@@ -113,6 +113,16 @@ export function NewListingForm() {
           <input type="hidden" name="redirectTo" value="/listings/new" />
           <Button type="submit" variant="accent" size="sm">
             {t("verifyPhone")}
+          </Button>
+        </form>
+      ) : null}
+
+      {state.requiresId ? (
+        <form action={verifyIdentityAction} className="rounded-lg border border-border bg-muted/40 p-4">
+          <input type="hidden" name="locale" value={locale} />
+          <input type="hidden" name="redirectTo" value="/listings/new" />
+          <Button type="submit" variant="accent" size="sm">
+            {t("verifyIdentity")}
           </Button>
         </form>
       ) : null}

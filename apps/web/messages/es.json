@@ -163,11 +163,12 @@
     "errors": {
       "invalid_fields": "Añade un título (3+ caracteres) y una descripción.",
       "verify_email": "Verifica tu email antes de publicar.",
-      "phone_required_for_paid": "Verifica tu teléfono para publicar un alquiler. Mantiene la confianza del barrio sin costarnos apenas nada.",
-      "phone_required_first_lend": "Verifica tu teléfono antes de tu primer anuncio.",
+      "phone_required_for_paid": "Verifica tu teléfono para publicar un alquiler (fianzas menores de 50 €).",
+      "id_required_for_high_deposit": "Verifica tu identidad para publicar un alquiler con fianza de 50 € o más.",
       "not_allowed": "Todavía no puedes publicar este anuncio."
     },
-    "verifyPhone": "Verificar teléfono (demo)"
+    "verifyPhone": "Verificar teléfono (demo)",
+    "verifyIdentity": "Verificar identidad (demo)"
   },
   "profile": {
     "title": "Tu perfil",
@@ -180,6 +181,8 @@
     "notVerified": "Sin verificar",
     "verifyPhone": "Verificar teléfono (demo)",
     "verifyPhoneNote": "En producción esto envía un código de un solo uso por SMS.",
+    "verifyIdentity": "Verificar identidad (demo)",
+    "verifyIdentityNote": "En producción sería una verificación de documento (Stripe Identity).",
     "stats": {
       "handoffs": "Préstamos completados",
       "vouches": "Avales",

@@ -18,6 +18,7 @@ export interface FormState {
   ok: boolean;
   errorCode?: string;
   requiresPhone?: boolean;
+  requiresId?: boolean;
 }
 
 function toSignals(owner: ListingOwner | null): TrustSignals {
@@ -58,12 +59,18 @@ export async function createListingAction(
   const userId = await requireUserId(locale);
 
   const terms = (str(formData, "terms") || "free") as ListingTerms;
-  const gate = listingGate(terms, toSignals(owner));
+  const priceEuros = intOrNull(formData, "priceEuros");
+  const depositEuros = intOrNull(formData, "depositEuros");
+  const depositCents = terms === "rent" && depositEuros !== null ? depositEuros * 100 : null;
+
+  // The gate depends on price, so parse the numbers before checking it.
+  const gate = listingGate({ terms, depositCents }, toSignals(owner));
   if (!gate.allowed) {
     return {
       ok: false,
       errorCode: gate.reason ?? "not_allowed",
       requiresPhone: gate.requiresPhoneVerification,
+      requiresId: gate.requiresIdentityVerification,
     };
   }
 
@@ -75,9 +82,6 @@ export async function createListingAction(
     return { ok: false, errorCode: "invalid_fields" };
   }
 
-  const priceEuros = intOrNull(formData, "priceEuros");
-  const depositEuros = intOrNull(formData, "depositEuros");
-
   const listing = await listings.create({
     ownerId: userId,
     type,
@@ -87,7 +91,7 @@ export async function createListingAction(
     description,
     priceCents: terms === "rent" && priceEuros !== null ? priceEuros * 100 : null,
     priceUnit: (str(formData, "priceUnit") || "day") as "hour" | "day" | "week",
-    depositCents: terms === "rent" && depositEuros !== null ? depositEuros * 100 : null,
+    depositCents,
     lat: Number.parseFloat(str(formData, "lat")) || 41.4005,
     lng: Number.parseFloat(str(formData, "lng")) || 2.1975,
   });
@@ -159,6 +163,19 @@ export async function verifyPhoneAction(formData: FormData) {
   if (!userId) redirect(localePath(locale, "/sign-in"));
 
   await listings.verifyPhone(userId);
+  revalidatePath("/", "layout");
+  redirect(localePath(locale, redirectTo));
+}
+
+export async function verifyIdentityAction(formData: FormData) {
+  const locale = str(formData, "locale") || "es";
+  const redirectTo = str(formData, "redirectTo") || "/profile";
+
+  const { listings, userId } = await getStores();
+  if (!userId) redirect(localePath(locale, "/sign-in"));
+
+  // Demo stand-in for an ID document check (Stripe Identity in Phase 3).
+  await listings.verifyIdentity(userId);
   revalidatePath("/", "layout");
   redirect(localePath(locale, redirectTo));
 }
