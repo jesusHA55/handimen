@@ -1,3 +1,5 @@
+import { cache } from "react";
+
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 export interface CurrentUser {
@@ -13,9 +15,10 @@ export interface CurrentUser {
  * Resolves the signed-in Supabase user from the request cookies.
  *
  * Returns null when signed out (and on any auth/network error) so callers can
- * fall back to the demo identity instead of crashing the page.
+ * fall back instead of crashing the page. Memoized per request — `getUser()` is
+ * a network round trip to the auth server, and the layout and page both ask.
  */
-export async function getCurrentUser(): Promise<CurrentUser | null> {
+export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
   try {
     const supabase = await getSupabaseServerClient();
     const { data, error } = await supabase.auth.getUser();
@@ -45,4 +48,4 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
   } catch {
     return null;
   }
-}
+});

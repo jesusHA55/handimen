@@ -8,11 +8,13 @@ import {
   type PostVisibility,
   type TrustSignals,
 } from "@handimen/core";
+import { createMessagesRepository, createRequestsStore } from "@handimen/db/repositories";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { localePath } from "@/lib/format";
 import { getStores } from "@/lib/stores";
+import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 export interface FormState {
@@ -306,7 +308,7 @@ export async function createReviewAction(formData: FormData) {
  */
 export async function seedDemoContentAction(formData: FormData) {
   const locale = str(formData, "locale") || "es";
-  const { client, listings, requests, messages } = await getStores();
+  const { listings, messages } = await getStores();
   const userId = await requireUserId(locale);
 
   const existing = await listings.list({ ownerId: userId });
@@ -330,7 +332,10 @@ export async function seedDemoContentAction(formData: FormData) {
     photos: ["🛠️"],
   });
 
-  const { data: neighbour } = await client
+  // The neighbour has to be the requester, which RLS rightly forbids for us —
+  // so the neighbour-attributed rows go through the service role.
+  const admin = getSupabaseAdminClient();
+  const { data: neighbour } = await admin
     .from("profiles")
     .select("id")
     .neq("id", userId)
@@ -338,10 +343,16 @@ export async function seedDemoContentAction(formData: FormData) {
     .maybeSingle();
 
   if (neighbour) {
+    const thread = await messages.getOrCreateThread({
+      participantA: userId,
+      participantB: neighbour.id,
+      context: { listingId: listing.id, listingTitle: listing.title },
+    });
+
     const start = new Date(Date.now() + 86_400_000);
     const end = new Date(Date.now() + 4 * 86_400_000);
 
-    await requests.create({
+    await createRequestsStore(admin).create({
       listingId: listing.id,
       requesterId: neighbour.id,
       startDate: start.toISOString(),
@@ -349,20 +360,8 @@ export async function seedDemoContentAction(formData: FormData) {
       message: "¡Hola! ¿Lo tendrías libre este finde? Es para montar una estantería.",
     });
 
-    await messages.getOrCreateThread({
-      participantA: userId,
-      participantB: neighbour.id,
-      context: { listingId: listing.id, listingTitle: listing.title },
-    });
-
-    await messages.sendMessage({
-      threadId: (
-        await messages.getOrCreateThread({
-          participantA: userId,
-          participantB: neighbour.id,
-          context: { listingId: listing.id, listingTitle: listing.title },
-        })
-      ).id,
+    await createMessagesRepository(admin).sendMessage({
+      threadId: thread.id,
       senderId: neighbour.id,
       body: "¡Buenas! Te acabo de enviar una solicitud para el taladro. ¿Te va bien el sábado por la mañana?",
     });

@@ -88,3 +88,11 @@ pnpm db:types         # regenerate packages/db/src/database.types.ts
 > **Portability:** we develop on Vercel Hobby but must migrate to Cloudflare
 > before public launch. See [`docs/portability.md`](./docs/portability.md) for the
 > constraints every contributor must follow.
+
+## Docs
+
+- [`docs/plan.md`](./docs/plan.md) — product & technical plan, roadmap, trust tiers
+- [`docs/scalability.md`](./docs/scalability.md) — what costs us, tier by tier, and the
+  business-side view of scale
+- [`docs/supabase.md`](./docs/supabase.md) — schema, seeding, auth setup, what's real
+- [`docs/portability.md`](./docs/portability.md) — Vercel → Cloudflare guardrails

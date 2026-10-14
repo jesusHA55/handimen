@@ -2,8 +2,6 @@ import { NextResponse } from "next/server";
 
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
-export const dynamic = "force-dynamic";
-
 /**
  * Connectivity probe: proves the server can reach Supabase with the anon key
  * and that Row Level Security lets public reads through.

@@ -1,6 +1,7 @@
 import type { ListingOwner } from "@handimen/core";
 import { createSupabaseStores, type SupabaseStores } from "@handimen/db/repositories";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { cache } from "react";
 
 import type { Database } from "@handimen/db";
 
@@ -25,8 +26,11 @@ export interface AppContext extends SupabaseStores {
  * Repositories are Supabase-backed and RLS-bound: the database — not the app —
  * decides what the current member can read and write. Signed-out visitors can
  * still browse (active listings and public profiles are publicly readable).
+ *
+ * Wrapped in `cache()` so the layout and the page share one set of round trips
+ * per request instead of each paying for their own.
  */
-export async function getStores(): Promise<AppContext> {
+export const getStores = cache(async (): Promise<AppContext> => {
   const client = await getSupabaseServerClient();
   const authUser = await getCurrentUser();
 
@@ -43,4 +47,4 @@ export async function getStores(): Promise<AppContext> {
     email: authUser?.email ?? null,
     owner,
   };
-}
+});
