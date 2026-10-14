@@ -104,7 +104,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                     author={ownerMap.get(post.authorId) ?? null}
                     liked={liked.get(post.id) ?? false}
                     isMine={userId === post.authorId}
-                    locale={locale}
                   />
                 </li>
               ))}

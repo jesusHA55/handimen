@@ -3,8 +3,8 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { RelativeTime } from "@/components/relative-time";
 import { Link } from "@/i18n/navigation";
-import { formatRelativeTime } from "@/lib/format";
 import { getStores } from "@/lib/stores";
 
 export default async function MessagesPage({
@@ -60,7 +60,7 @@ export default async function MessagesPage({
                             <Badge variant="accent">{t("unread", { count: unreadCount })}</Badge>
                           ) : null}
                           <span className="ml-auto shrink-0 text-xs text-muted-foreground">
-                            {lastMessage ? formatRelativeTime(lastMessage.createdAt, locale) : ""}
+                            {lastMessage ? <RelativeTime iso={lastMessage.createdAt} /> : null}
                           </span>
                         </div>
 

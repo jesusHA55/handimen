@@ -6,10 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Field, Input, Textarea } from "@/components/ui/field";
 import { createRequestAction } from "@/lib/actions";
 
-function toDateInput(offsetDays: number): string {
-  return new Date(Date.now() + offsetDays * 86_400_000).toISOString().slice(0, 10);
-}
-
+/**
+ * Dates are left blank rather than defaulted: computing "today" needs
+ * `Date.now()`, which Cache Components rejects during prerender. Pickers fill in
+ * the common case anyway.
+ */
 export function RequestForm({ listingId }: { listingId: string }) {
   const t = useTranslations("request");
   const locale = useLocale();
@@ -21,10 +22,10 @@ export function RequestForm({ listingId }: { listingId: string }) {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label={t("startDate")}>
-          <Input name="startDate" type="date" defaultValue={toDateInput(0)} required />
+          <Input name="startDate" type="date" required />
         </Field>
         <Field label={t("endDate")}>
-          <Input name="endDate" type="date" defaultValue={toDateInput(1)} required />
+          <Input name="endDate" type="date" required />
         </Field>
       </div>
 

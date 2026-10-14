@@ -3,13 +3,14 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 
 import { RequestForm } from "@/components/request-form";
+import { RelativeTime } from "@/components/relative-time";
 import { ReviewList } from "@/components/review-list";
 import { StartThreadForm } from "@/components/start-thread-form";
 import { TrustBadge } from "@/components/trust-badge";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "@/i18n/navigation";
-import { formatCurrency, formatRelativeTime } from "@/lib/format";
+import { formatCurrency } from "@/lib/format";
 import { getStores } from "@/lib/stores";
 
 export default async function ListingPage({
@@ -60,7 +61,7 @@ export default async function ListingPage({
               </Badge>
               <Badge variant="muted">{tCategories(listing.category)}</Badge>
               <span className="text-xs text-muted-foreground">
-                {t("posted", { time: formatRelativeTime(listing.createdAt, locale) })}
+                {t("posted")} · <RelativeTime iso={listing.createdAt} />
               </span>
             </div>
 

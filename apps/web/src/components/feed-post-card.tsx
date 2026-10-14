@@ -2,30 +2,29 @@
 
 import type { FeedPost, ListingOwner } from "@handimen/core";
 import { MessageSquare, Trash2 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import { LikeButton } from "@/components/like-button";
+import { RelativeTime } from "@/components/relative-time";
 import { TrustBadge } from "@/components/trust-badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "@/i18n/navigation";
 import { deletePostAction } from "@/lib/actions";
-import { formatRelativeTime } from "@/lib/format";
 
 export function FeedPostCard({
   post,
   author,
   liked,
   isMine,
-  locale,
 }: {
   post: FeedPost;
   author: ListingOwner | null;
   liked: boolean;
   isMine: boolean;
-  locale: string;
 }) {
   const t = useTranslations("feed");
+  const locale = useLocale();
 
   return (
     <Card>
@@ -39,7 +38,7 @@ export function FeedPostCard({
             {author ? <TrustBadge tier={author.trustTier} /> : null}
           </div>
           <span className="ml-auto text-xs text-muted-foreground">
-            {formatRelativeTime(post.createdAt, locale)}
+            <RelativeTime iso={post.createdAt} />
           </span>
         </div>
 

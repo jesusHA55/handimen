@@ -1,9 +1,10 @@
 "use client";
 
 import { Star } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 
 import { Card, CardContent } from "@/components/ui/card";
+import { RelativeTime } from "@/components/relative-time";
 import { formatRelativeTime } from "@/lib/format";
 
 export interface ReviewItem {
@@ -17,7 +18,6 @@ export interface ReviewItem {
 
 export function ReviewList({ items }: { items: ReviewItem[] }) {
   const t = useTranslations("review");
-  const locale = useLocale();
 
   if (items.length === 0) {
     return (
@@ -44,7 +44,7 @@ export function ReviewList({ items }: { items: ReviewItem[] }) {
                   ))}
                 </span>
                 <span className="ml-auto text-xs text-muted-foreground">
-                  {formatRelativeTime(item.createdAt, locale)}
+                  <RelativeTime iso={item.createdAt} />
                 </span>
               </div>
               {item.comment ? <p className="text-sm">{item.comment}</p> : null}

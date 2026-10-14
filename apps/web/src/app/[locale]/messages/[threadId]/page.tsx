@@ -3,9 +3,9 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 
 import { MessageComposer } from "@/components/message-composer";
+import { RelativeTime } from "@/components/relative-time";
 import { TrustBadge } from "@/components/trust-badge";
 import { Link } from "@/i18n/navigation";
-import { formatRelativeTime } from "@/lib/format";
 import { getStores } from "@/lib/stores";
 import { cn } from "@/lib/utils";
 
@@ -87,8 +87,7 @@ export default async function ThreadPage({
                     mine ? "text-primary-foreground/70" : "text-muted-foreground",
                   )}
                 >
-                  {formatRelativeTime(message.createdAt, locale)}
-                </p>
+                  <RelativeTime iso={message.createdAt} />                </p>
               </div>
             </li>
           );

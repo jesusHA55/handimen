@@ -3,13 +3,13 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 
 import { LikeButton } from "@/components/like-button";
+import { RelativeTime } from "@/components/relative-time";
 import { TrustBadge } from "@/components/trust-badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/field";
 import { Link } from "@/i18n/navigation";
 import { addCommentAction, deleteCommentAction } from "@/lib/actions";
-import { formatRelativeTime } from "@/lib/format";
 import { getStores } from "@/lib/stores";
 
 export default async function PostPage({
@@ -56,7 +56,7 @@ export default async function PostPage({
               {author ? <TrustBadge tier={author.trustTier} /> : null}
             </div>
             <span className="ml-auto text-xs text-muted-foreground">
-              {formatRelativeTime(post.createdAt, locale)}
+              <RelativeTime iso={post.createdAt} />
             </span>
           </div>
 
@@ -98,7 +98,7 @@ export default async function PostPage({
                           {commenter?.displayName ?? "?"}
                         </span>
                         <span className="text-xs text-muted-foreground">
-                          {formatRelativeTime(comment.createdAt, locale)}
+                          <RelativeTime iso={comment.createdAt} />
                         </span>
                       </div>
                       <p className="whitespace-pre-line text-sm">{comment.body}</p>

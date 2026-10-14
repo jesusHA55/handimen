@@ -59,7 +59,7 @@
     "deposit": "Deposit",
     "pickup": "Pickup",
     "about": "About this listing",
-    "posted": "Posted {time}",
+    "posted": "Posted",
     "yours": "This is your listing",
     "backToExplore": "Back to explore",
     "notFound": "Listing not found."

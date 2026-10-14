@@ -59,6 +59,9 @@ Delivered before Phase 2, because adopting caching gets harder with every page a
       group/followers posts.
 - [x] **Service-role client isolated** to the demo seeder (`lib/supabase/admin.ts`),
       because the neighbour-attributed insert legitimately can't pass RLS.
+- [x] **Client-only timestamps** (`<RelativeTime>`): `Date.now()` is rejected during
+      prerender, and a cached shell would show a *stale* "3 hours ago" anyway. The
+      server renders a deterministic absolute date; the client upgrades it.
 
 ## 4. Tier B — before public launch
 
