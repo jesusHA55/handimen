@@ -109,6 +109,8 @@ export function NewListingForm() {
 
       {state.requiresPhone ? (
         <form action={verifyPhoneAction} className="rounded-lg border border-border bg-muted/40 p-4">
+          <input type="hidden" name="locale" value={locale} />
+          <input type="hidden" name="redirectTo" value="/listings/new" />
           <Button type="submit" variant="accent" size="sm">
             {t("verifyPhone")}
           </Button>

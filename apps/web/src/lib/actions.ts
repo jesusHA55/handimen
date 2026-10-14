@@ -151,11 +151,16 @@ export async function toggleLikeAction(formData: FormData) {
   revalidatePath("/", "layout");
 }
 
-export async function verifyPhoneAction() {
+export async function verifyPhoneAction(formData: FormData) {
+  const locale = str(formData, "locale") || "es";
+  const redirectTo = str(formData, "redirectTo") || "/profile";
+
   const { listings, userId } = await getStores();
-  if (!userId) return;
+  if (!userId) redirect(localePath(locale, "/sign-in"));
+
   await listings.verifyPhone(userId);
   revalidatePath("/", "layout");
+  redirect(localePath(locale, redirectTo));
 }
 
 export async function startThreadAction(formData: FormData) {

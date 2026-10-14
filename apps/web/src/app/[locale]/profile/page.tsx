@@ -105,6 +105,8 @@ export default async function ProfilePage({
 
           {!owner.phoneVerified ? (
             <form action={verifyPhoneAction} className="flex flex-col gap-2">
+              <input type="hidden" name="locale" value={locale} />
+              <input type="hidden" name="redirectTo" value="/profile" />
               <Button type="submit" variant="accent" size="sm" className="self-start">
                 {t("verifyPhone")}
               </Button>
