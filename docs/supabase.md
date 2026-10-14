@@ -18,8 +18,12 @@ There are two paths. They're not exclusive — most teams do **A then B**.
 - [x] `GET /api/health` proves connectivity (reads `cities` through RLS)
 - [x] Supabase Auth magic link: `/sign-in`, `/auth/callback`, sign-out
 - [x] Auth redirect allow-list set to `http://localhost:3000/auth/callback`
-- [ ] **Custom SMTP** — the built-in emailer only delivers to org team members
-      (2/hour). Magic links only reach your Supabase account email until then.
+- [x] Custom SMTP via **Resend** (`smtp.resend.com:465`, user `resend`, sender
+      `onboarding@resend.dev`, limit raised 2 → 30 emails/hour). Verified
+      end-to-end: Supabase Auth accepted an OTP send (`200`) through Resend.
+- [ ] **Verified sending domain** in Resend → switch the sender to
+      `no-reply@<domain>`. Until then Resend only delivers to the Resend account
+      owner's address, so magic links work for that one email only.
 - [ ] Swap the mock repositories for Supabase-backed implementations
 
 > Migrations were applied via the Management API (no local Postgres/CLI needed).
